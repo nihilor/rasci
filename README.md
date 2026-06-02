@@ -364,22 +364,22 @@ Afterwards open `http://localhost:4173/docs/index.html` in your web browser or c
 A task should have exactly one **A**. **R** may be shared across roles.
 **S**, **C**, and **I** are informational and do not imply decision authority.
 
-## TODO
+## Todo
 
 - [ ] Add i18n support for role labels, group labels, task headers, etc.
 - [x] Add live preview website for testing and sharing RASCI diagrams
+- [x] Add documentation and examples
+- [x] Add support for comments in the DSL
+- [x] Add support for multi-line task descriptions
+- [x] Add support for role aliases in the DSL (e.g. "R: Responsible (R1, R2)", "A: Accountable (A1, A2)", etc.)
+- [x] Add CLI options for customizing the output (e.g. show/hide role labels, role group headers, etc.)
 
 ## Feature Ideas
 
-- [ ] Add CLI options for customizing the output (e.g. show/hide role labels, role group headers, etc.)
 - [ ] Add support for custom cell styles (e.g. colors, icons, etc.)
 - [ ] Add support for exporting to other formats (e.g. Excel, CSV, etc.)
 - [ ] Add tests for the parser and renderer
-- [ ] Add documentation and examples
 - [ ] Add error handling and validation for the input DSL
-- [ ] Add support for comments in the DSL
-- [ ] Add support for multi-line task descriptions
-- [ ] Add support for role aliases in the DSL (e.g. "R: Responsible (R1, R2)", "A: Accountable (A1, A2)", etc.)
 
 ## License
 

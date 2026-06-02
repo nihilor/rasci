@@ -1,0 +1,34 @@
+diagram     ::= "%%rasci" roles tasks
+
+%% roles
+
+roles      ::= "roles" ":" role-item+
+role-item  ::= role-def | role-group
+role-def   ::= [alias] string
+               %% alias optional; defaults to string value (trimmed)
+               %% alias: /[A-Z][A-Z0-9_]*/
+role-group ::= "group" string ":" role-item+
+               %% groups nest arbitrarily; leaf path stored as string[]
+
+%% tasks
+
+tasks      ::= "tasks" ":" task-item+
+task-item  ::= task-def | task-group
+task-def   ::= [task-id] string ":" meta* assignment+
+               %% task-id optional; defaults to slug(label)
+               %% slug: lowercase, whitespace → "_", non-alnum stripped
+task-group ::= "group" string ":" meta* task-item+
+meta       ::= ("desc" | "link") ":" string
+               %% desc: free text, rendered as tooltip
+               %% link: URL, rendered as ↗ anchor next to label
+assignment ::= (alias | string) "[" rasci-list "]"
+rasci-list ::= rasci-char ("," rasci-char)*
+rasci-char ::= "R" | "A" | "S" | "C" | "I"
+
+%% shared terminals
+
+alias      ::= [A-Z][A-Z0-9_]*
+task-id    ::= [A-Z][A-Z0-9_]*
+string     ::= '"' [^"]* '"'
+comment    ::= "%%" .*          %% stripped before tokenising (existing Mermaid convention)
+indent     ::= "  "+            %% 2 spaces per level; tabs not supported

@@ -14,10 +14,15 @@
     "node": ">=18"
   },
   "scripts": {
+    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js docs/src/",
+    "prepack": "npm run build:docs",
+    "prepublishOnly": "npm run build:docs",
+    "prelive-editor": "npm run build:docs",
     "example": "npm run example:html && npm run example:markdown && npm run example:json",
     "example:html": "node rasci-cli.js example/example.rasci -f html -o example/example.html",
     "example:markdown": "node rasci-cli.js example/example.rasci -f markdown -o example/example.md",
-    "example:json": "node rasci-cli.js example/example.rasci -f json -o example/example.json"
+    "example:json": "node rasci-cli.js example/example.rasci -f json -o example/example.json",
+    "live-editor": "npx --yes http-server . -p 4173 -c-1"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RASCI Live Editor</title>
+  <link rel="stylesheet" href="./rasci.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div>
+        <h1 class="title">RASCI Live Editor</h1>
+        <p class="subtitle">Runs fully in your browser using this repo's current parser and renderers.</p>
+      </div>
+      <div class="actions">
+        <button id="btn-format">Format Input</button>
+        <button id="btn-reset">Reset Example</button>
+        <button id="btn-copy-md">Copy Markdown</button>
+        <button id="btn-copy-json">Copy JSON</button>
+        <button id="btn-render" class="primary">Render</button>
+      </div>
+    </header>
+
+    <div id="status" class="status">Ready.</div>
+
+    <div class="workspace">
+      <section class="panel">
+        <div class="panel-head">Input (.rasci)</div>
+        <textarea id="input" class="editor" spellcheck="false" aria-label="RASCI input"></textarea>
+      </section>
+
+      <section class="panel">
+        <div class="tabs" role="tablist" aria-label="Output format">
+          <button class="tab" role="tab" aria-selected="true" data-pane="html">HTML Preview</button>
+          <button class="tab" role="tab" aria-selected="false" data-pane="markdown">Markdown</button>
+          <button class="tab" role="tab" aria-selected="false" data-pane="json">JSON</button>
+        </div>
+        <div class="preview">
+          <div id="pane-html" class="preview-pane active"><iframe id="html-frame" title="HTML preview"></iframe></div>
+          <div id="pane-markdown" class="preview-pane"><pre id="markdown-output"></pre></div>
+          <div id="pane-json" class="preview-pane"><pre id="json-output"></pre></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="live-editor.js"></script>
+</body>
+</html>

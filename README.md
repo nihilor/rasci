@@ -52,6 +52,7 @@ npm install -g .
   - [Metadata](#metadata)
   - [Assignments](#assignments)
 - [Output formats](#output-formats)
+- [Live preview website](#live-preview-website)
 - [RASCI legend](#rasci-legend)
 
 ## How
@@ -332,6 +333,22 @@ and a map of `alias → [attrs]` for all non-empty cells.
 rasci matrix.rasci -f json -o matrix.json
 ```
 
+## Live preview website
+
+A browser-only live editor is available in [docs/index.html](docs/index.html).
+It imports the current parser and renderers directly from [src/parser.js](src/parser.js),
+[src/renderer.html.js](src/renderer.html.js), and [src/renderer.markdown.js](src/renderer.markdown.js),
+so it always reflects the current RASCI implementation in this repository.
+
+First, tart the HTTP server:
+
+```bash
+npm run live-editor
+```
+
+Afterwards open `http://localhost:4173/docs/index.html` in your web browser or click the link in the terminal output.
+
+
 ## RASCI legend
 
 | Value | Name | Meaning |
@@ -348,7 +365,7 @@ A task should have exactly one **A**. **R** may be shared across roles.
 ## TODO
 
 - [ ] Add i18n support for role labels, group labels, task headers, etc.
-- [ ] Add live preview website for testing and sharing RASCI diagrams
+- [x] Add live preview website for testing and sharing RASCI diagrams
 
 ## Feature Ideas
 

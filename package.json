@@ -1,0 +1,42 @@
+{
+  "name": "rasci",
+  "version": "0.1.0",
+  "description": "Parser and renderer for the RASCI DSL. Converts .rasci to HTML, Markdown and JSON.",
+  "type": "module",
+  "bin": {
+    "rasci": "rasci-cli.js"
+  },
+  "files": [
+    "rasci-cli.js",
+    "src/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "example": "npm run example:html && npm run example:markdown && npm run example:json",
+    "example:html": "node rasci-cli.js example/example.rasci -f html -o example/example.html",
+    "example:markdown": "node rasci-cli.js example/example.rasci -f markdown -o example/example.md",
+    "example:json": "node rasci-cli.js example/example.rasci -f json -o example/example.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nihilor/rasci.git"
+  },
+  "keywords": [
+    "rasci",
+    "raci",
+    "responsibility",
+    "matrix",
+    "diagram",
+    "dsl",
+    "parser",
+    "renderer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nihilor/rasci/issues"
+  },
+  "homepage": "https://github.com/nihilor/rasci#readme"
+}

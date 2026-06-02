@@ -1,0 +1,327 @@
+{
+  "roles": [
+    {
+      "alias": "PO",
+      "label": "Product Owner",
+      "group": []
+    },
+    {
+      "alias": "PM",
+      "label": "Project Manager",
+      "group": []
+    },
+    {
+      "alias": "Stakeholder",
+      "label": "Stakeholder",
+      "group": []
+    },
+    {
+      "alias": "FE",
+      "label": "Frontend Engineer",
+      "group": [
+        "Engineering"
+      ]
+    },
+    {
+      "alias": "BE",
+      "label": "Backend Engineer",
+      "group": [
+        "Engineering"
+      ]
+    },
+    {
+      "alias": "OPS",
+      "label": "Operations",
+      "group": [
+        "Engineering",
+        "Platform"
+      ]
+    },
+    {
+      "alias": "SEC",
+      "label": "Security",
+      "group": [
+        "Engineering",
+        "Platform"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "label": "Collect requirements",
+      "meta": {
+        "desc": "Stakeholder interviews and documentation"
+      },
+      "assignments": [
+        {
+          "roleAlias": "PO",
+          "attrs": [
+            "A"
+          ]
+        },
+        {
+          "roleAlias": "PM",
+          "attrs": [
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "FE",
+          "attrs": [
+            "C"
+          ]
+        },
+        {
+          "roleAlias": "BE",
+          "attrs": [
+            "C"
+          ]
+        },
+        {
+          "roleAlias": "Stakeholder",
+          "attrs": [
+            "I"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "analyze_market",
+      "label": "Analyze market",
+      "meta": {},
+      "assignments": [
+        {
+          "roleAlias": "PM",
+          "attrs": [
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "PO",
+          "attrs": [
+            "A"
+          ]
+        },
+        {
+          "roleAlias": "Stakeholder",
+          "attrs": [
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "label": "Design architecture",
+      "meta": {
+        "link": "https://wiki.example.com/adr/001"
+      },
+      "assignments": [
+        {
+          "roleAlias": "BE",
+          "attrs": [
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "FE",
+          "attrs": [
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "PO",
+          "attrs": [
+            "A"
+          ]
+        },
+        {
+          "roleAlias": "SEC",
+          "attrs": [
+            "C"
+          ]
+        },
+        {
+          "roleAlias": "OPS",
+          "attrs": [
+            "C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "label": "Prepare deployment",
+      "meta": {},
+      "assignments": [
+        {
+          "roleAlias": "OPS",
+          "attrs": [
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "BE",
+          "attrs": [
+            "S"
+          ]
+        },
+        {
+          "roleAlias": "SEC",
+          "attrs": [
+            "C"
+          ]
+        },
+        {
+          "roleAlias": "PM",
+          "attrs": [
+            "A"
+          ]
+        },
+        {
+          "roleAlias": "Stakeholder",
+          "attrs": [
+            "I"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "label": "Approve release",
+      "meta": {},
+      "assignments": [
+        {
+          "roleAlias": "PO",
+          "attrs": [
+            "A",
+            "R"
+          ]
+        },
+        {
+          "roleAlias": "PM",
+          "attrs": [
+            "C"
+          ]
+        },
+        {
+          "roleAlias": "Stakeholder",
+          "attrs": [
+            "I"
+          ]
+        }
+      ]
+    }
+  ],
+  "matrix": [
+    {
+      "group": "Discovery",
+      "taskId": "T01",
+      "taskLabel": "Collect requirements",
+      "meta": {
+        "desc": "Stakeholder interviews and documentation"
+      },
+      "assignments": {
+        "PO": [
+          "A"
+        ],
+        "PM": [
+          "R"
+        ],
+        "Stakeholder": [
+          "I"
+        ],
+        "FE": [
+          "C"
+        ],
+        "BE": [
+          "C"
+        ]
+      }
+    },
+    {
+      "group": "Discovery",
+      "taskId": "analyze_market",
+      "taskLabel": "Analyze market",
+      "meta": {},
+      "assignments": {
+        "PO": [
+          "A"
+        ],
+        "PM": [
+          "R"
+        ],
+        "Stakeholder": [
+          "C"
+        ]
+      }
+    },
+    {
+      "group": "Realization",
+      "taskId": "T02",
+      "taskLabel": "Design architecture",
+      "meta": {
+        "link": "https://wiki.example.com/adr/001"
+      },
+      "assignments": {
+        "PO": [
+          "A"
+        ],
+        "FE": [
+          "R"
+        ],
+        "BE": [
+          "R"
+        ],
+        "OPS": [
+          "C"
+        ],
+        "SEC": [
+          "C"
+        ]
+      }
+    },
+    {
+      "group": "Realization",
+      "taskId": "T03",
+      "taskLabel": "Prepare deployment",
+      "meta": {},
+      "assignments": {
+        "PM": [
+          "A"
+        ],
+        "Stakeholder": [
+          "I"
+        ],
+        "BE": [
+          "S"
+        ],
+        "OPS": [
+          "R"
+        ],
+        "SEC": [
+          "C"
+        ]
+      }
+    },
+    {
+      "group": null,
+      "taskId": "T04",
+      "taskLabel": "Approve release",
+      "meta": {},
+      "assignments": {
+        "PO": [
+          "A",
+          "R"
+        ],
+        "PM": [
+          "C"
+        ],
+        "Stakeholder": [
+          "I"
+        ]
+      }
+    }
+  ]
+}

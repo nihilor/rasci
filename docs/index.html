@@ -28,7 +28,10 @@
     <div class="workspace">
       <section class="panel">
         <div class="panel-head">Input (.rasci)</div>
-        <textarea id="input" class="editor" spellcheck="false" aria-label="RASCI input"></textarea>
+        <div class="editor-wrap">
+          <pre id="line-numbers" class="line-numbers" aria-hidden="true"></pre>
+          <textarea id="input" class="editor" spellcheck="false" aria-label="RASCI input"></textarea>
+        </div>
       </section>
 
       <section class="panel">

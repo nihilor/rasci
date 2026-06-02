@@ -18,7 +18,7 @@ roles:
 tasks:
   group "Discovery":
     desc: "Clarify Requirements and Constraints"
-    link: "https://wiki.example.com/discovery"
+    link: "https://nihilor.github.io/rasci"
 
     T01 "Collect requirements":
       desc: "Stakeholder interviews and documentation"
@@ -29,7 +29,7 @@ tasks:
 
   group "Realization":
     T02 "Design architecture":
-      link: "https://wiki.example.com/adr/001"
+      link: "https://github.com/nihilor/rasci"
       BE[R] FE[R] PO[A] SEC[C] OPS[C]
 
     T03 "Prepare deployment":
@@ -40,6 +40,7 @@ tasks:
 `;
 
 const input = document.getElementById("input");
+const lineNumbers = document.getElementById("line-numbers");
 const status = document.getElementById("status");
 const htmlFrame = document.getElementById("html-frame");
 const markdownOutput = document.getElementById("markdown-output");
@@ -93,6 +94,15 @@ function showPane(name) {
     document.querySelectorAll(".preview-pane").forEach(el => el.classList.remove("active"));
     document.getElementById(`pane-${name}`).classList.add("active");
 }
+
+  function updateLineNumbers() {
+    const lineCount = input.value.split("\n").length || 1;
+    lineNumbers.textContent = Array.from({ length: lineCount }, (_, i) => String(i + 1)).join("\n");
+  }
+
+  function syncLineNumberScroll() {
+    lineNumbers.scrollTop = input.scrollTop;
+  }
 
 function createHtmlDocument(fragment) {
     return `<!doctype html>
@@ -159,15 +169,22 @@ tabs.forEach(tab => {
     tab.addEventListener("click", () => showPane(tab.dataset.pane));
 });
 
+input.addEventListener("input", updateLineNumbers);
+input.addEventListener("scroll", syncLineNumberScroll);
+
 btnRender.addEventListener("click", render);
 
 btnReset.addEventListener("click", () => {
     input.value = STARTER;
+  updateLineNumbers();
+  syncLineNumberScroll();
     render();
 });
 
 btnFormat.addEventListener("click", () => {
     input.value = formatInput(input.value);
+  updateLineNumbers();
+  syncLineNumberScroll();
     render();
 });
 
@@ -175,4 +192,5 @@ btnCopyMd.addEventListener("click", () => copyText(lastMarkdown));
 btnCopyJson.addEventListener("click", () => copyText(lastJson));
 
 input.value = STARTER;
+updateLineNumbers();
 render();

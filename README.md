@@ -115,7 +115,7 @@ roles:
 tasks:
   group "Discovery":
     desc: "Clarify Requirements and Constraints"
-    link: "https://wiki.example.com/discovery"
+    link: "https://nihilor.github.io/rasci"
 
     T01 "Collect requirements":
       desc: "Stakeholder interviews and documentation"
@@ -126,7 +126,7 @@ tasks:
 
   group "Realization":
     T02 "Design architecture":
-      link: "https://wiki.example.com/adr/001"
+      link: "https://github.com/nihilor/rasci"
       BE[R] FE[R] PO[A] SEC[C] OPS[C]
 
     T03 "Prepare deployment":
@@ -226,8 +226,8 @@ in the table body. Groups support [metadata](#metadata).
 ```rasci
 tasks:
   group "Discovery":
-    desc: "Define scope and requirements"
-    link: "https://wiki.example.com/discovery"
+    desc: "Clarify Requirements and Constraints"
+    link: "https://nihilor.github.io/rasci"
 
     T01 "Gather requirements":
       PO[A] PM[R] FE[C] BE[C] Stakeholder[I]
@@ -257,12 +257,12 @@ any assignments or child items.
 ```rasci
 tasks:
   group "Discovery":
-    desc: "Define scope and requirements"       %% tooltip on group row
-    link: "https://wiki.example.com/discovery"  %% ↗ link on group row
+    desc: "Clarify Requirements and Constraints"       %% tooltip on group row
+    link: "https://nihilor.github.io/rasci"            %% ↗ link on group row
 
     T01 "Gather requirements":
-      desc: "Stakeholder interviews"            %% tooltip on task row
-      link: "https://wiki.example.com/t01"      %% ↗ link on task row
+      desc: "Stakeholder interviews"                   %% tooltip on task row
+      link: "https://github.com/nihilor/rasci"         %% ↗ link on task row
       PO[A] PM[R] Stakeholder[I]
 ```
 

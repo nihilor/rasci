@@ -7,7 +7,7 @@
 - **Platform:** **OPS** Operations, **SEC** Security
 - **PO** Product Owner, **PM** Project Manager, **Stakeholder** Stakeholder
 
-## Discovery [↗](https://wiki.example.com/discovery)
+## Discovery [↗](https://nihilor.github.io/rasci)
 _Clarify Requirements and Constraints_
 
 | Task                 | Description                              |     PO      |     PM      | Stakeholder |     FE      |     BE      |     OPS     |     SEC     |
@@ -28,4 +28,4 @@ _Clarify Requirements and Constraints_
 
 ---
 
-[^1]: https://wiki.example.com/adr/001
+[^1]: https://github.com/nihilor/rasci

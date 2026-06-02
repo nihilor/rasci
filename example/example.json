@@ -115,7 +115,7 @@
       "id": "T02",
       "label": "Design architecture",
       "meta": {
-        "link": "https://wiki.example.com/adr/001"
+        "link": "https://github.com/nihilor/rasci"
       },
       "assignments": [
         {
@@ -262,7 +262,7 @@
       "taskId": "T02",
       "taskLabel": "Design architecture",
       "meta": {
-        "link": "https://wiki.example.com/adr/001"
+        "link": "https://github.com/nihilor/rasci"
       },
       "assignments": {
         "PO": [

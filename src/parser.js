@@ -442,21 +442,52 @@ function consumeIndentedLine(ts, expectedDepth) {
 // ---------------------------------------------------------------------------
 
 /**
- * Checks referential integrity: all roleAlias in assignments must
- * be defined in the roles section.
+ * Checks the following constraints:
+ *  1. Referential integrity    — all roleAlias in assignments must be defined in roles
+ *  2. Duplicate role aliases   — each alias must be declared only once
+ *  3. Duplicate task IDs       — each task ID must be unique
+ *  4. A-rule                   — each task can have at most one Accountable
  *
  * @param {RasciDiagram} diagram
  * @returns {{ valid: boolean, errors: string[] }}
  */
 export function validate(diagram) {
-  const errors  = []
-  const aliasSet = new Set(collectAliases(diagram.roles))
+  const errors = []
 
+  // (1), (2) Role aliases ---
+  const allAliases = collectAliases(diagram.roles)
+  const aliasSet   = new Set()
+  for (const alias of allAliases) {
+    if (aliasSet.has(alias)) {
+      errors.push(`Role alias "${alias}" is defined multiple times`)
+    } else {
+      aliasSet.add(alias)
+    }
+  }
+
+  // (3), (4) Tasks
+  const taskIdSet = new Set()
   for (const task of flatTasks(diagram.tasks)) {
+
+    // (3) Duplicate task ID
+    if (taskIdSet.has(task.id)) {
+      errors.push(`Task ID "${task.id}" is assigned multiple times (Label: "${task.label}")`)
+    } else {
+      taskIdSet.add(task.id)
+    }
+
+    // (1) Unknown aliases in assignments
     for (const a of task.assignments) {
       if (!aliasSet.has(a.roleAlias)) {
         errors.push(`Task "${task.label}": unknown alias "${a.roleAlias}"`)
       }
+    }
+
+    // (4) A-rule: at most one Accountable per task
+    const accountable = task.assignments.filter(a => a.attrs.includes("A"))
+    if (accountable.length > 1) {
+      const names = accountable.map(a => `"${a.roleAlias}"`).join(", ")
+      errors.push(`Task "${task.label}": multiple Accountable (A) assigned — ${names}`)
     }
   }
 

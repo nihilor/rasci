@@ -385,8 +385,18 @@ function parseAssignments(ts, depth) {
     consumeIndentedLine(ts, depth)
 
     while (!ts.isEOF() && !ts.is(TK.NEWLINE) && !ts.is(TK.INDENT)) {
-      // IDENT [ RASCI_LIST ]
-      const roleAlias = ts.expect(TK.IDENT).value
+      // (IDENT | STRING) [ RASCI_LIST ]
+      let roleAlias
+      if (ts.is(TK.IDENT) || ts.is(TK.STRING)) {
+        roleAlias = ts.advance().value
+      } else {
+        const t = ts.peek()
+        throw new ParseError(
+          `Expected role alias (IDENT or quoted STRING), got ${t.type}(${JSON.stringify(t.value)})`,
+          t.line,
+          t.col
+        )
+      }
       ts.expect(TK.LBRACKET)
       const attrs = parseRasciList(ts)
       ts.expect(TK.RBRACKET)

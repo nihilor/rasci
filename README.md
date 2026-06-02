@@ -336,11 +336,13 @@ rasci matrix.rasci -f json -o matrix.json
 ## Live preview website
 
 A browser-only live editor is available in [docs/index.html](docs/index.html).
-It imports the current parser and renderers directly from [src/parser.js](src/parser.js),
-[src/renderer.html.js](src/renderer.html.js), and [src/renderer.markdown.js](src/renderer.markdown.js),
-so it always reflects the current RASCI implementation in this repository.
+For GitHub Pages compatibility it loads browser modules from [docs/src/parser.js](docs/src/parser.js),
+[docs/src/renderer.html.js](docs/src/renderer.html.js), and [docs/src/renderer.markdown.js](docs/src/renderer.markdown.js).
+These files are synced from `src/` via `npm run build:docs`.
 
-First, tart the HTTP server:
+The repository includes [docs/.nojekyll](docs/.nojekyll), so GitHub Pages serves the site without Jekyll/theme processing.
+
+First, start the HTTP server:
 
 ```bash
 npm run live-editor

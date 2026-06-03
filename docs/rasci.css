@@ -106,6 +106,22 @@ button {
     cursor: pointer;
 }
 
+.action-link {
+    border: 1px solid var(--border);
+    background: #f6f8fa;
+    color: var(--text);
+    font-family: var(--sans);
+    border-radius: 8px;
+    padding: 7px 11px;
+    font-size: 13px;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.action-link:hover {
+    border-color: #8c959f;
+}
+
 button:hover {
     border-color: #8c959f;
 }

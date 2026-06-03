@@ -52,6 +52,7 @@ npm install -g .
   - [Metadata](#metadata)
   - [Assignments](#assignments)
 - [Output formats](#output-formats)
+- [Web component](#web-component)
 - [Live preview website](#live-preview-website)
 - [RASCI legend](#rasci-legend)
 
@@ -333,9 +334,42 @@ and a map of `alias → [attrs]` for all non-empty cells.
 rasci matrix.rasci -f json -o matrix.json
 ```
 
+## Web component
+
+You can render a RASCI matrix directly in the browser with the custom element
+`<rasci-table>`, registered by [src/web-component.js](src/web-component.js).
+
+### Usage
+
+```html
+<script type="module" src="./src/web-component.js"></script>
+
+<rasci-table no-role-labels>
+%%rasci
+
+roles:
+  PO "Product Owner"
+  "Stakeholder"
+
+tasks:
+  "Collect requirements":
+    PO[A] "Stakeholder"[I]
+</rasci-table>
+```
+
+### Supported attributes
+
+- `no-role-groups`: hides grouped role header row
+- `no-role-labels`: hides role-label tooltips in column headers
+
+The element reads the RASCI DSL from its text content, parses it with
+[src/parser.js](src/parser.js), validates it, and renders the table via a
+table-only renderer path in [src/renderer.html.js](src/renderer.html.js).
+
 ## Live preview website
 
 A browser-only live editor is available in [docs/index.html](docs/index.html).
+An interactive web component showcase is available in [docs/web-component-demo.html](docs/web-component-demo.html).
 For GitHub Pages compatibility it loads browser modules from [docs/src/parser.js](docs/src/parser.js),
 [docs/src/renderer.html.js](docs/src/renderer.html.js), and [docs/src/renderer.markdown.js](docs/src/renderer.markdown.js).
 These files are synced from `src/` via `npm run build:docs`.

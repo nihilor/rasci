@@ -76,9 +76,9 @@ function buildRows(tasks, roles) {
 /**
  * @param {import("./parser.js").RasciDiagram} diagram
  * @param {{ showRoleGroups?: boolean, showRoleLabels?: boolean }} [options]
- * @returns {string}  HTML string (complete table with embedded CSS)
+ * @returns {string}  HTML string (table fragment without a document wrapper)
  */
-export function renderHTML(diagram, options = {}) {
+export function renderHTMLTable(diagram, options = {}) {
   const { showRoleGroups = true, showRoleLabels = true } = options
   const matrix = normalize(diagram)
   const { roles, groups } = matrix
@@ -170,6 +170,22 @@ export function renderHTML(diagram, options = {}) {
   lines.push(`</div>`)
 
   return lines.join("\n")
+}
+
+/**
+ * @returns {string} HTML style tag for RASCI table rendering
+ */
+export function renderHTMLStyleTag() {
+  return css()
+}
+
+/**
+ * @param {import("./parser.js").RasciDiagram} diagram
+ * @param {{ showRoleGroups?: boolean, showRoleLabels?: boolean }} [options]
+ * @returns {string}  HTML string (table with embedded CSS)
+ */
+export function renderHTML(diagram, options = {}) {
+  return [renderHTMLStyleTag(), renderHTMLTable(diagram, options)].join("\n")
 }
 
 // ---------------------------------------------------------------------------

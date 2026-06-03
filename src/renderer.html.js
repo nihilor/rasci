@@ -90,7 +90,6 @@ export function renderHTMLTable(diagram, options = {}) {
 
   const lines = []
 
-  lines.push(css())
   lines.push(`<div class="rasci-wrapper">`)
   lines.push(`<table class="rasci-table" role="grid">`)
 

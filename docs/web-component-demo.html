@@ -31,6 +31,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
+      min-block-size: fit-content;
     }
 
     .demo-title {
@@ -49,6 +50,26 @@
       white-space: pre-wrap;
       font-family: var(--mono);
       overflow: auto;
+    }
+
+    rasci-table.theme-forest {
+      --rasci-border: #c8d7ce;
+      --rasci-bg-corner: #eef8f1;
+      --rasci-bg-header: #dceee3;
+      --rasci-bg-task: #ffffff;
+      --rasci-text-primary: #1f3a2a;
+      --rasci-text-muted: #597868;
+
+      --rasci-r-bg: #ffe8b3;
+      --rasci-r-fg: #7a4f00;
+      --rasci-a-bg: #ffd9d5;
+      --rasci-a-fg: #8e2f1e;
+      --rasci-s-bg: #d0f0d9;
+      --rasci-s-fg: #1a6a38;
+      --rasci-c-bg: #cfe8ff;
+      --rasci-c-fg: #124c7f;
+      --rasci-i-bg: #ecf3ef;
+      --rasci-i-fg: #4a6557;
     }
   </style>
 </head>
@@ -100,6 +121,28 @@ tasks:
 
   "Ship release":
     DEV[R] PO[A]
+        </rasci-table>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">Custom style mode (CSS variable overrides)</h2>
+        <rasci-table class="theme-forest">
+%%rasci
+
+roles:
+  PM "Project Manager"
+  FE "Frontend Engineer"
+  BE "Backend Engineer"
+
+tasks:
+  "Prepare sprint":
+    PM[A] FE[C] BE[C]
+
+  "Implement UI":
+    FE[R] PM[C] BE[S]
+
+  "Release build":
+    BE[R] PM[A] FE[I]
         </rasci-table>
       </section>
 

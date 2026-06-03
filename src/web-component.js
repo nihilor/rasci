@@ -37,9 +37,9 @@ class RasciTableElement extends HTMLElement {
   }
 
   render() {
-    const source = this.source.trim()
+    const source = normalizeSource(this.source)
 
-    if (!source) {
+    if (!source.trim()) {
       this.shadowRoot.innerHTML = `${renderHTMLStyleTag()}<div class="rasci-wrapper"><p>No RASCI source provided.</p></div>`
       return
     }
@@ -57,6 +57,31 @@ class RasciTableElement extends HTMLElement {
       this.shadowRoot.innerHTML = `${renderHTMLStyleTag()}<div class="rasci-wrapper"><pre style="white-space: pre-wrap; color: #cf222e;">${escapeHTML(msg)}</pre></div>`
     }
   }
+}
+
+/** Essential, otherwise we get in trouble */
+function normalizeSource(raw) {
+  const text = String(raw ?? "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\t/g, "  ")
+    .replace(/[\u00A0\u200B\u200C\u200D\uFEFF]/g, " ")
+
+  const lines = text.split("\n")
+  const startAt = lines.findIndex(line => {
+    const t = line.trim()
+    return t === "%%rasci" || t === "roles:" || t === "tasks:"
+  })
+
+  const workLines = startAt >= 0 ? lines.slice(startAt) : lines
+
+  while (workLines.length && !workLines[0].trim()) workLines.shift()
+  while (workLines.length && !workLines[workLines.length - 1].trim()) workLines.pop()
+
+  const nonEmpty = workLines.filter(line => line.trim())
+  if (!nonEmpty.length) return ""
+
+  const minIndent = Math.min(...nonEmpty.map(line => (line.match(/^ */)?.[0].length ?? 0)))
+  return workLines.map(line => line.slice(Math.min(minIndent, line.length))).join("\n")
 }
 
 function escapeHTML(str) {

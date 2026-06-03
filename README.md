@@ -342,6 +342,7 @@ You can render a RASCI matrix directly in the browser with the custom element
 ### Usage
 
 ```html
+<link rel="stylesheet" href="./src/rasci-table.css">
 <script type="module" src="./src/web-component.js"></script>
 
 <rasci-table no-role-labels>
@@ -365,6 +366,9 @@ tasks:
 The element reads the RASCI DSL from its text content, parses it with
 [src/parser.js](src/parser.js), validates it, and renders the table via a
 table-only renderer path in [src/renderer.html.js](src/renderer.html.js).
+
+It's shipped with a default table styling as [src/rasci-table.css](src/rasci-table.css).
+Use it as-is, override it, or omit it entirely if you want fully custom styles. It's your call.
 
 ## Live preview website
 
@@ -401,6 +405,7 @@ A task should have exactly one **A**. **R** may be shared across roles.
 ## Todo
 
 - [ ] Add i18n support for role labels, group labels, task headers, etc.
+- [x] Provide a web component for live preview and embedding in documentation sites.
 - [x] Add live preview website for testing and sharing RASCI diagrams
 - [x] Add documentation and examples
 - [x] Add support for comments in the DSL
@@ -410,6 +415,7 @@ A task should have exactly one **A**. **R** may be shared across roles.
 
 ## Feature Ideas
 
+- [ ] Provide an API for programmatic usage in JavaScript projects.
 - [ ] Add support for custom cell styles (e.g. colors, icons, etc.)
 - [ ] Add support for exporting to other formats (e.g. Excel, CSV, etc.)
 - [ ] Add tests for the parser and renderer

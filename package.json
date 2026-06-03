@@ -14,7 +14,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js src/web-component.js docs/src/",
+    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js src/web-component.js src/rasci-table.css docs/src/",
     "prepack": "npm run build:docs",
     "prepublishOnly": "npm run build:docs",
     "prelive-editor": "npm run build:docs",

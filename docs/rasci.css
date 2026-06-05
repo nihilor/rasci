@@ -35,6 +35,7 @@ body.preview-body {
 }
 a svg {
     color: var(--text);
+    vertical-align: text-bottom;
 }
 
 a svg:hover {
@@ -106,6 +107,22 @@ button {
     cursor: pointer;
 }
 
+.action-link {
+    border: 1px solid var(--border);
+    background: #f6f8fa;
+    color: var(--text);
+    font-family: var(--sans);
+    border-radius: 8px;
+    padding: 7px 11px;
+    font-size: 13px;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.action-link:hover {
+    border-color: #8c959f;
+}
+
 button:hover {
     border-color: #8c959f;
 }
@@ -156,6 +173,9 @@ button:hover {
     background: #f6f8fa;
     color: var(--muted);
     text-align: right;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     font-family: var(--mono);
     font-size: 13px;

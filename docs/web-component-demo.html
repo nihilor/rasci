@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RASCI Web Component Demo</title>
+  <link rel="stylesheet" href="./rasci.css">
+  <style>
+    .demo-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .demo-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .demo-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .demo-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      min-block-size: fit-content;
+    }
+
+    .demo-title {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .demo-code {
+      margin: 8px 0 0;
+      background: #f6f8fa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      font-family: var(--mono);
+      overflow: auto;
+    }
+
+    rasci-table.theme-forest {
+      --rasci-border: #c8d7ce;
+      --rasci-bg-corner: #eef8f1;
+      --rasci-bg-header: #dceee3;
+      --rasci-bg-task: #ffffff;
+      --rasci-text-primary: #1f3a2a;
+      --rasci-text-muted: #597868;
+
+      --rasci-r-bg: #ffe8b3;
+      --rasci-r-fg: #7a4f00;
+      --rasci-a-bg: #ffd9d5;
+      --rasci-a-fg: #8e2f1e;
+      --rasci-s-bg: #d0f0d9;
+      --rasci-s-fg: #1a6a38;
+      --rasci-c-bg: #cfe8ff;
+      --rasci-c-fg: #124c7f;
+      --rasci-i-bg: #ecf3ef;
+      --rasci-i-fg: #4a6557;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-shell">
+    <header class="demo-head">
+      <div>
+        <h1 class="title">RASCI Web Component Demo</h1>
+        <p class="subtitle">Live examples of the <code>&lt;rasci-table&gt;</code> custom element.</p>
+      </div>
+      <a class="action-link" href="./index.html">Back to Live Editor</a>
+    </header>
+
+    <main class="demo-grid">
+      <section class="demo-card">
+        <h2 class="demo-title">Default rendering</h2>
+        <rasci-table>
+%%rasci
+
+roles:
+  PO "Product Owner"
+  DEV "Developer"
+  "Stakeholder"
+
+tasks:
+  group "Discovery":
+    "Collect requirements":
+      PO[A] DEV[C] "Stakeholder"[I]
+
+  group "Delivery":
+    "Implement feature":
+      DEV[R] PO[A] "Stakeholder"[I]
+        </rasci-table>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">No role groups + no role labels</h2>
+        <rasci-table no-role-groups no-role-labels>
+%%rasci
+
+roles:
+  group "Team":
+    PO "Product Owner"
+    DEV "Developer"
+
+tasks:
+  "Refine backlog":
+    PO[A] DEV[C]
+
+  "Ship release":
+    DEV[R] PO[A]
+        </rasci-table>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">Custom style mode (CSS variable overrides)</h2>
+        <rasci-table class="theme-forest">
+%%rasci
+
+roles:
+  PM "Project Manager"
+  FE "Frontend Engineer"
+  BE "Backend Engineer"
+
+tasks:
+  "Prepare sprint":
+    PM[A] FE[C] BE[C]
+
+  "Implement UI":
+    FE[R] PM[C] BE[S]
+
+  "Release build":
+    BE[R] PM[A] FE[I]
+        </rasci-table>
+      </section>
+
+      <section class="demo-card">
+        <h2 class="demo-title">Usage snippet</h2>
+        <pre class="demo-code">&lt;script type="module" src="./src/web-component.js"&gt;&lt;/script&gt;
+
+&lt;rasci-table no-role-groups&gt;
+%%rasci
+
+roles:
+  PO "Product Owner"
+  "Stakeholder"
+
+tasks:
+  "Plan roadmap":
+    PO[A] "Stakeholder"[C]
+&lt;/rasci-table&gt;</pre>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./src/web-component.js"></script>
+</body>
+</html>

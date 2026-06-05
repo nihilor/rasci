@@ -1,8 +1,16 @@
 {
   "name": "rasci",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parser and renderer for the RASCI DSL. Converts .rasci to HTML, Markdown and JSON.",
   "type": "module",
+  "exports": {
+    "./parser": "./src/parser.js",
+    "./renderer/html": "./src/renderer.html.js",
+    "./renderer/markdown": "./src/renderer.markdown.js",
+    "./web-component": "./src/web-component.js",
+    "./rasci-table.css": "./src/rasci-table.css",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "rasci": "rasci-cli.js"
   },
@@ -14,7 +22,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js docs/src/",
+    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js src/web-component.js src/rasci-table.css docs/src/",
     "prepack": "npm run build:docs",
     "prepublishOnly": "npm run build:docs",
     "prelive-editor": "npm run build:docs",
@@ -24,6 +32,7 @@
     "example:json": "node rasci-cli.js example/example.rasci -f json -o example/example.json",
     "live-editor": "npx --yes http-server . -p 4173 -c-1"
   },
+  "packageManager": "npm@11.6.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nihilor/rasci.git"
@@ -38,8 +47,11 @@
     "parser",
     "renderer"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Mark Lubkowitz <mail@mark-lubkowitz.de>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/nihilor/rasci/issues"
   },

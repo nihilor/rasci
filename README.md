@@ -21,8 +21,6 @@ for embedding examples and the [RASCI Live Editor](https://nihilor.github.io/ras
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/rasci.svg)](https://badge.fury.io/js/rasci)
 
-
-
 ## Why
 
 RASCI or RACI matrices are usually maintained as tables or spreadsheets. These formats lack semantic

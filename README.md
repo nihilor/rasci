@@ -17,7 +17,7 @@ tasks:
 If you want to try it in the browser, check out the [web component](https://nihilor.github.io/rasci/web-component-demo.html)
 for embedding examples and the [RASCI Live Editor](https://nihilor.github.io/rasci/) for quick testing and sharing.
 
-[![Socket Badge](https://badge.socket.dev/npm/package/rasci/0.2.0)](https://badge.socket.dev/npm/package/rasci/0.2.0)
+[![Socket Badge](https://badge.socket.dev/npm/package/rasci/0.3.0)](https://badge.socket.dev/npm/package/rasci/0.3.0)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/rasci.svg)](https://badge.fury.io/js/rasci)
 

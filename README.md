@@ -21,8 +21,6 @@ for embedding examples and the [RASCI Live Editor](https://nihilor.github.io/ras
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/rasci.svg)](https://badge.fury.io/js/rasci)
 
-
-
 ## Why
 
 RASCI or RACI matrices are usually maintained as tables or spreadsheets. These formats lack semantic
@@ -369,13 +367,13 @@ rasci matrix.rasci -f json -o matrix.json
 ## Web component
 
 You can also render a RASCI matrix directly in the browser with the custom element
-`<rasci-table>`, registered by [src/web-component.js](src/web-component.js).
+`<rasci-table>`, registered by [src/rasci-table.js](src/rasci-table.js).
 
 ### Usage
 
 ```html
 <link rel="stylesheet" href="./src/rasci-table.css">
-<script type="module" src="./src/web-component.js"></script>
+<script type="module" src="./src/rasci-table.js"></script>
 
 <rasci-table no-role-labels>
 %%rasci

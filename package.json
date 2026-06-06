@@ -7,7 +7,7 @@
     "./parser": "./src/parser.js",
     "./renderer/html": "./src/renderer.html.js",
     "./renderer/markdown": "./src/renderer.markdown.js",
-    "./web-component": "./src/web-component.js",
+    "./rasci-table": "./src/rasci-table.js",
     "./rasci-table.css": "./src/rasci-table.css",
     "./package.json": "./package.json"
   },
@@ -22,7 +22,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js src/web-component.js src/rasci-table.css docs/src/",
+    "build:docs": "mkdir -p docs/src && cp src/parser.js src/renderer.html.js src/renderer.markdown.js src/rasci-table.js src/rasci-table.css docs/src/",
     "prepack": "npm run build:docs",
     "prepublishOnly": "npm run build:docs",
     "prelive-editor": "npm run build:docs",

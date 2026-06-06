@@ -8,6 +8,7 @@
     "./renderer/html": "./src/renderer.html.js",
     "./renderer/markdown": "./src/renderer.markdown.js",
     "./web-component": "./src/web-component.js",
+    "./rasci-table": "./src/web-component.js",
     "./rasci-table.css": "./src/rasci-table.css",
     "./package.json": "./package.json"
   },

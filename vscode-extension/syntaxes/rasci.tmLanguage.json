@@ -1,0 +1,97 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "RASCI",
+  "scopeName": "source.rasci",
+  "fileTypes": [
+    "rasci",
+    "rasci-rules"
+  ],
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#string"
+    },
+    {
+      "include": "#rasci_list"
+    },
+    {
+      "include": "#section_kw"
+    },
+    {
+      "include": "#meta_kw"
+    },
+    {
+      "include": "#list_marker"
+    },
+    {
+      "include": "#assignment_role"
+    },
+    {
+      "include": "#alias"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#colon"
+    },
+    {
+      "include": "#bracket"
+    },
+    {
+      "include": "#comma"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.rasci",
+      "match": "%%(?!\\{)[^\\n]*"
+    },
+    "string": {
+      "name": "string.quoted.double.rasci",
+      "match": "\"[^\"]*\""
+    },
+    "rasci_list": {
+      "name": "constant.language.rasci",
+      "match": "(?<=\\[)[RASCI,]+(?=\\])"
+    },
+    "section_kw": {
+      "name": "keyword.control.rasci",
+      "match": "\\b(roles|tasks|rules|group)\\b"
+    },
+    "meta_kw": {
+      "name": "keyword.other.rasci",
+      "match": "\\b(desc|link)\\b"
+    },
+    "list_marker": {
+      "name": "punctuation.definition.list.rasci",
+      "match": "^\\s*-(?=\\s)"
+    },
+    "assignment_role": {
+      "name": "entity.name.function.rasci",
+      "match": "\\b[A-Z][A-Z0-9_]*(?=\\s*\\[)"
+    },
+    "alias": {
+      "name": "entity.name.tag.rasci",
+      "match": "\\b[A-Z][A-Z0-9_]*\\b"
+    },
+    "number": {
+      "name": "constant.numeric.rasci",
+      "match": "\\b[0-9]+\\b"
+    },
+    "colon": {
+      "name": "punctuation.separator.rasci",
+      "match": ":"
+    },
+    "bracket": {
+      "name": "punctuation.definition.bracket.rasci",
+      "match": "[\\[\\]]"
+    },
+    "comma": {
+      "name": "punctuation.separator.rasci",
+      "match": ","
+    }
+  }
+}

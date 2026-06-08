@@ -1,7 +1,5 @@
 # RASCI DSL for VS Code
 
-[![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/nihilor.rasci-language)](https://marketplace.visualstudio.com/items?itemName=nihilor.rasci-language)
-[![VS Code Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/nihilor.rasci-language)](https://marketplace.visualstudio.com/items?itemName=nihilor.rasci-language)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 
 Write RASCI responsibility matrices as plain text and get immediate visual feedback while you edit.
@@ -103,6 +101,23 @@ This runs build + `vsce package`.
 
 - Main project repository: https://github.com/nihilor/rasci
 - RASCI live editor: https://nihilor.github.io/rasci/
+
+## Live Preview Details
+
+Beyond this VS Code preview panel, the main repository ships a browser live preview site and component demo:
+
+- Live editor page: https://nihilor.github.io/rasci/
+- Live editor source: [../docs/index.html](../docs/index.html)
+- Web component showcase: https://nihilor.github.io/rasci/web-component-demo.html
+- Showcase source: [../docs/web-component-demo.html](../docs/web-component-demo.html)
+
+The browser site uses docs-local module copies of the parser and renderers:
+
+- [../docs/src/parser.js](../docs/src/parser.js)
+- [../docs/src/renderer.html.js](../docs/src/renderer.html.js)
+- [../docs/src/renderer.markdown.js](../docs/src/renderer.markdown.js)
+
+Those docs modules are synced from the main [../src](../src) directory via the docs build flow.
 
 ## License
 

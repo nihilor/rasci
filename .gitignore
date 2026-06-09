@@ -143,4 +143,4 @@ vite.config.ts.timestamp-*
 .vite/
 
 # Visual Studio Code Extensions
-*.vsix
+vscode-extension/*.vsix

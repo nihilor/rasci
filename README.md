@@ -20,6 +20,8 @@ for embedding examples and the [RASCI Live Editor](https://nihilor.github.io/ras
 [![Socket Badge](https://badge.socket.dev/npm/package/rasci/0.3.0)](https://badge.socket.dev/npm/package/rasci/0.3.0)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/rasci.svg)](https://badge.fury.io/js/rasci)
+[![CI VSCode Extension](https://github.com/nihilor/rasci/actions/workflows/ci-vscode-extension.yml/badge.svg?branch=main)](https://github.com/nihilor/rasci/actions/workflows/ci-vscode-extension.yml)
+[![Release VSIX](https://github.com/nihilor/rasci/actions/workflows/release-vsix.yml/badge.svg)](https://github.com/nihilor/rasci/actions/workflows/release-vsix.yml)
 
 ## Why
 

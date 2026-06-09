@@ -1,0 +1,80 @@
+name: Release VSIX
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: vscode-extension/package-lock.json
+
+      - name: Install extension dependencies
+        working-directory: vscode-extension
+        run: npm ci
+
+      - name: Build and package VSIX
+        working-directory: vscode-extension
+        run: npm run package
+
+      - name: Resolve release metadata
+        id: meta
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            echo "name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            ts="$(date -u +'%Y%m%d-%H%M%S')"
+            echo "tag=manual-${ts}" >> "$GITHUB_OUTPUT"
+            echo "name=manual-${ts}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          release_name: ${{ steps.meta.outputs.name }}
+          draft: false
+          prerelease: false
+
+      - name: Resolve VSIX artifact
+        id: vsix
+        shell: bash
+        run: |
+          vsix_file="$(ls -1 vscode-extension/*.vsix | head -n 1)"
+          if [[ -z "$vsix_file" ]]; then
+            echo "No .vsix file found in vscode-extension/"
+            exit 1
+          fi
+          echo "path=${vsix_file}" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$vsix_file")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload VSIX asset
+        id: upload_vsix
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.vsix.outputs.path }}
+          asset_name: ${{ steps.vsix.outputs.name }}
+          asset_content_type: application/octet-stream

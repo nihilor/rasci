@@ -5,7 +5,7 @@ const tableCssHref = new URL("./rasci-table.css", import.meta.url).href
 
 class RasciTableElement extends HTMLElement {
   static get observedAttributes() {
-    return ["no-role-groups", "no-role-labels"]
+    return ["no-role-groups", "no-role-labels", "show-aliases-only"]
   }
 
   constructor() {

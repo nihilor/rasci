@@ -5,6 +5,8 @@
   --rasci-bg-task: #ffffff;
   --rasci-text-primary: #24292f;
   --rasci-text-muted: #8c959f;
+  --rasci-text-subtle: #57606a;
+  --rasci-error: #cf222e;
 
   --rasci-r-bg: #fff8c5;
   --rasci-r-fg: #7d4e00;
@@ -18,16 +20,43 @@
   --rasci-i-fg: #57606a;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rasci-border: #3d444d;
+    --rasci-bg-corner: #161b22;
+    --rasci-bg-header: #1f2630;
+    --rasci-bg-task: #0d1117;
+    --rasci-text-primary: #e6edf3;
+    --rasci-text-muted: #9da7b3;
+    --rasci-text-subtle: #b1bac4;
+    --rasci-error: #ff7b72;
+
+    --rasci-r-bg: #4f3b00;
+    --rasci-r-fg: #f2cc60;
+    --rasci-a-bg: #5a1e17;
+    --rasci-a-fg: #ffb3a7;
+    --rasci-s-bg: #0f3a20;
+    --rasci-s-fg: #7ee787;
+    --rasci-c-bg: #0c2d4a;
+    --rasci-c-fg: #79c0ff;
+    --rasci-i-bg: #21262d;
+    --rasci-i-fg: #c9d1d9;
+  }
+}
+
 .rasci-wrapper {
   overflow-x: auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-size: 13px;
+  color-scheme: light dark;
 }
 
 .rasci-table {
   border-collapse: collapse;
   inline-size: 100%;
   min-inline-size: 400px;
+  background: var(--rasci-bg-task);
+  color: var(--rasci-text-primary);
 }
 
 .rasci-table th,
@@ -53,7 +82,7 @@
   font-weight: 600;
   font-size: 11px;
   letter-spacing: .04em;
-  color: #57606a;
+  color: var(--rasci-text-subtle);
 }
 
 .rasci-role-header {
@@ -109,12 +138,13 @@
   align-items: center;
   justify-content: center;
   block-size: 1.9em;
-  inline-size: 1.9em;
+  min-inline-size: 1.9em;
   margin: 0 .08em;
-  border-radius: 999px;
+  border-radius: 100em;
   border: 1px solid transparent;
   box-sizing: border-box;
   line-height: 1;
+  padding: 0.5em;
 }
 
 .rasci-R {
@@ -160,5 +190,5 @@
 }
 
 .rasci-error {
-  color: #cf222e;
+  color: var(--rasci-error);
 }

@@ -1,5 +1,7 @@
 import { parse, validate } from "./parser.js"
-import { renderHTMLStyleTag, renderHTMLTable } from "./renderer.html.js"
+import { renderHTMLTable } from "./renderer.html.js"
+
+const tableCssHref = new URL("./rasci-table.css", import.meta.url).href
 
 class RasciTableElement extends HTMLElement {
   static get observedAttributes() {
@@ -38,9 +40,10 @@ class RasciTableElement extends HTMLElement {
 
   render() {
     const source = normalizeSource(this.source)
+    const tableStyle = `<link rel="stylesheet" href="${tableCssHref}">`
 
     if (!source.trim()) {
-      this.shadowRoot.innerHTML = `${renderHTMLStyleTag()}<div class="rasci-wrapper"><p>No RASCI source provided.</p></div>`
+      this.shadowRoot.innerHTML = `${tableStyle}<div class="rasci-wrapper"><p>No RASCI source provided.</p></div>`
       return
     }
 
@@ -51,10 +54,10 @@ class RasciTableElement extends HTMLElement {
         throw new Error(errors.join("\n"))
       }
 
-      this.shadowRoot.innerHTML = `${renderHTMLStyleTag()}${renderHTMLTable(diagram, this.options)}`
+      this.shadowRoot.innerHTML = `${tableStyle}${renderHTMLTable(diagram, this.options)}`
     } catch (error) {
       const msg = error?.message ?? String(error)
-      this.shadowRoot.innerHTML = `${renderHTMLStyleTag()}<div class="rasci-wrapper"><pre style="white-space: pre-wrap; color: #cf222e;">${escapeHTML(msg)}</pre></div>`
+      this.shadowRoot.innerHTML = `${tableStyle}<div class="rasci-wrapper"><pre style="white-space: pre-wrap; color: #cf222e;">${escapeHTML(msg)}</pre></div>`
     }
   }
 }

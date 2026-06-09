@@ -2,7 +2,7 @@
  * RASCI DSL — HTML-Renderer
  *
  * Input:  RasciDiagram (IR from parser.js)
- * Output:  HTML string (complete, standalone table with embedded CSS)
+ * Output:  HTML string (table fragment only; no CSS)
  *
  * Features:
  *  - Task groups as color-coded headers
@@ -10,7 +10,7 @@
  *  - desc as title attribute (tooltip)
  *  - link as ↗ anchor next to label
  *  - RASCI cells color-coded via CSS classes
- *  - Standalone <style> block; no external CSS needed
+ *  - Styling is provided via external stylesheet (rasci-table.css)
  */
 
 import { flatRoles, flatTasks } from "./parser.js"
@@ -172,19 +172,12 @@ export function renderHTMLTable(diagram, options = {}) {
 }
 
 /**
- * @returns {string} HTML style tag for RASCI table rendering
- */
-export function renderHTMLStyleTag() {
-  return css()
-}
-
-/**
  * @param {import("./parser.js").RasciDiagram} diagram
  * @param {{ showRoleGroups?: boolean, showRoleLabels?: boolean }} [options]
- * @returns {string}  HTML string (table with embedded CSS)
+ * @returns {string}  HTML string (table fragment)
  */
 export function renderHTML(diagram, options = {}) {
-  return [renderHTMLStyleTag(), renderHTMLTable(diagram, options)].join("\n")
+  return renderHTMLTable(diagram, options)
 }
 
 // ---------------------------------------------------------------------------
@@ -217,90 +210,4 @@ function esc(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-}
-
-// ---------------------------------------------------------------------------
-// Embedded CSS
-// TODO: Move to separate .css file if it grows too much or needs more features (e.g. theming)
-// ---------------------------------------------------------------------------
-
-function css() {
-  return `<style>
-:root {
-  --rasci-border: #d0d7de;
-  --rasci-bg-corner: #f6f8fa;
-  --rasci-bg-header: #eef2f6;
-  --rasci-bg-task: #ffffff;
-  --rasci-text-primary: #24292f;
-  --rasci-text-muted: #8c959f;
-
-  --rasci-r-bg: #fff8c5;
-  --rasci-r-fg: #7d4e00;
-  --rasci-a-bg: #ffebe9;
-  --rasci-a-fg: #953800;
-  --rasci-s-bg: #dafbe1;
-  --rasci-s-fg: #116329;
-  --rasci-c-bg: #ddf4ff;
-  --rasci-c-fg: #0a3069;
-  --rasci-i-bg: #f6f8fa;
-  --rasci-i-fg: #57606a;
-}
-
-.rasci-wrapper {
-  overflow-x: auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
-}
-.rasci-table {
-  border-collapse: collapse;
-  inline-size: 100%;
-  min-inline-size: 400px;
-}
-.rasci-table th,
-.rasci-table td {
-  border: 1px solid var(--rasci-border);
-  padding: 5px 10px;
-  text-align: center;
-  white-space: nowrap;
-}
-.rasci-task-header,
-.rasci-task-label {
-  text-align: left;
-  min-inline-size: 180px;
-}
-.rasci-corner          { background: var(--rasci-bg-corner); }
-.rasci-group-header    { background: var(--rasci-bg-header); font-weight: 600; font-size: 11px; letter-spacing: .04em; color: #57606a; }
-.rasci-role-header     { background: var(--rasci-bg-corner); font-weight: 600; color: var(--rasci-text-primary); }
-.rasci-task-label      { background: var(--rasci-bg-task); color: var(--rasci-text-primary); white-space: normal; line-height: 1.35; }
-.rasci-task-main       { font-weight: 500; }
-.rasci-task-details    { margin-block-start: 4px; }
-.rasci-task-details summary { cursor: pointer; }
-.rasci-task-desc       { margin-block-start: 2px; font-size: 11px; color: var(--rasci-text-muted); }
-.rasci-phase-header    { background: var(--rasci-bg-header); font-weight: 600; text-align: left; color: var(--rasci-text-primary); padding: 4px 10px; }
-
-.rasci-cell            { font-weight: 500; font-size: 12px; }
-.rasci-empty           { color: var(--rasci-text-muted); }
-
-.rasci-attr {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  block-size: 1.9em;
-  inline-size: 1.9em;
-  margin: 0 .08em;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  box-sizing: border-box;
-  line-height: 1;
-}
-
-.rasci-R { background: var(--rasci-r-bg); color: var(--rasci-r-fg); border-color: var(--rasci-r-fg); }
-.rasci-A { background: var(--rasci-a-bg); color: var(--rasci-a-fg); border-color: var(--rasci-a-fg); }
-.rasci-S { background: var(--rasci-s-bg); color: var(--rasci-s-fg); border-color: var(--rasci-s-fg); }
-.rasci-C { background: var(--rasci-c-bg); color: var(--rasci-c-fg); border-color: var(--rasci-c-fg); }
-.rasci-I { background: var(--rasci-i-bg); color: var(--rasci-i-fg); border-color: var(--rasci-i-fg); }
-
-.rasci-link            { color: inherit; opacity: .6; text-decoration: none; margin-left: 4px; font-size: 11px; }
-.rasci-link:hover      { opacity: 1; }
-</style>`
 }

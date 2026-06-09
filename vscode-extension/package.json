@@ -2,18 +2,22 @@
   "name": "rasci-language",
   "displayName": "RASCI DSL",
   "description": "Syntax highlighting and live preview for .rasci files and rasci code blocks in Markdown",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "publisher": "nihilor",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Linters"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/nihilor/rasci"
+  },
+  "bugs": {
+    "url": "https://github.com/nihilor/rasci/issues"
   },
   "main": "./src/extension.js",
   "activationEvents": [

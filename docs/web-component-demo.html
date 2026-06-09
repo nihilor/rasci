@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RASCI Web Component Demo</title>
   <link rel="stylesheet" href="./rasci.css">
+  <link rel="stylesheet" href="./src/rasci-table.css">
   <style>
     .demo-shell {
       max-width: 1200px;
@@ -70,6 +71,39 @@
       --rasci-c-fg: #124c7f;
       --rasci-i-bg: #ecf3ef;
       --rasci-i-fg: #4a6557;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .demo-card {
+        background: var(--panel);
+        border-color: var(--border);
+      }
+
+      .demo-code {
+        background: #0d1117;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      rasci-table.theme-forest {
+        --rasci-border: #3d444d;
+        --rasci-bg-corner: #161b22;
+        --rasci-bg-header: #1f2630;
+        --rasci-bg-task: #0d1117;
+        --rasci-text-primary: #e6edf3;
+        --rasci-text-muted: #9da7b3;
+
+        --rasci-r-bg: #4f3b00;
+        --rasci-r-fg: #f2cc60;
+        --rasci-a-bg: #5a1e17;
+        --rasci-a-fg: #ffb3a7;
+        --rasci-s-bg: #0f3a20;
+        --rasci-s-fg: #7ee787;
+        --rasci-c-bg: #0c2d4a;
+        --rasci-c-fg: #79c0ff;
+        --rasci-i-bg: #21262d;
+        --rasci-i-fg: #c9d1d9;
+      }
     }
   </style>
 </head>
@@ -148,7 +182,8 @@ tasks:
 
       <section class="demo-card">
         <h2 class="demo-title">Usage snippet</h2>
-        <pre class="demo-code">&lt;script type="module" src="https://unpkg.com/rasci/src/rasci-table.js"&gt;&lt;/script&gt;
+        <pre class="demo-code">&lt;link rel="stylesheet" href="https://unpkg.com/rasci/src/rasci-table.css"&gt;
+      &lt;script type="module" src="https://unpkg.com/rasci/src/rasci-table.js"&gt;&lt;/script&gt;
 
 &lt;rasci-table no-role-groups&gt;
 %%rasci

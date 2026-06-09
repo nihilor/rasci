@@ -24,7 +24,7 @@ import { readFileSync, writeFileSync } from "fs"
 import { parse, validate }            from "./src/parser.js"
 import { renderHTML }                 from "./src/renderer.html.js"
 import { renderMarkdown }             from "./src/renderer.markdown.js"
-import { basename, extname }          from "path"
+import { basename, dirname, extname, resolve } from "path"
 
 // ---------------------------------------------------------------------------
 // Argument Parser (no external package)
@@ -148,13 +148,14 @@ function renderJSON(diagram) {
 // TODO: Move to separate module if it grows too much or needs more features (e.g. custom CSS)
 // ---------------------------------------------------------------------------
 
-function wrapHTML(fragment, title) {
+function wrapHTML(fragment, title, cssHref) {
   return `<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${title}</title>
+  <link rel="stylesheet" href="${cssHref}">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; padding: 2rem; background: #ffffff; color: #24292f; }
     h1   { font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; color: #24292f; }
@@ -217,10 +218,23 @@ if (!valid) {
 let output
 switch (args.format) {
   case "html":
-    output = wrapHTML(
-      renderHTML(diagram, { showRoleGroups: args.roleGroups, showRoleLabels: args.roleLabels }),
-      title
-    )
+    {
+      const cssHref = "./rasci-table.css"
+      const fragment = renderHTML(diagram, {
+        showRoleGroups: args.roleGroups,
+        showRoleLabels: args.roleLabels,
+      })
+
+      output = wrapHTML(fragment, title, cssHref)
+
+      if (args.output) {
+        const cssOutPath = resolve(dirname(args.output), "rasci-table.css")
+        const cssSourcePath = new URL("./src/rasci-table.css", import.meta.url)
+        const cssText = readFileSync(cssSourcePath, "utf8")
+        writeFileSync(cssOutPath, cssText, "utf8")
+        console.error(`[rasci-cli] ${cssOutPath} written.`)
+      }
+    }
     break
   case "markdown":
     output = renderMarkdown(diagram, { title })

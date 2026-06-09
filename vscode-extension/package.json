@@ -1,0 +1,109 @@
+{
+  "name": "rasci-language",
+  "displayName": "RASCI DSL",
+  "description": "Syntax highlighting and live preview for .rasci files and rasci code blocks in Markdown",
+  "version": "0.1.7",
+  "publisher": "nihilor",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nihilor/rasci"
+  },
+  "bugs": {
+    "url": "https://github.com/nihilor/rasci/issues"
+  },
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onLanguage:rasci",
+    "onCommand:rasci.showPreview",
+    "onCommand:rasci.showPreviewToSide"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "rasci",
+        "aliases": [
+          "RASCI",
+          "rasci"
+        ],
+        "extensions": [
+          ".rasci",
+          ".rasci-rules"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "rasci",
+        "scopeName": "source.rasci",
+        "path": "./syntaxes/rasci.tmLanguage.json"
+      },
+      {
+        "scopeName": "markdown.rasci.codeblock",
+        "path": "./syntaxes/rasci-markdown-injection.tmLanguage.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.rasci": "rasci"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "rasci.showPreview",
+        "title": "RASCI: Show Preview",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "rasci.showPreviewToSide",
+        "title": "RASCI: Show Preview to the Side",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "rasci.showPreviewToSide",
+          "when": "editorLangId == rasci",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "rasci.showPreview",
+          "when": "editorLangId == rasci"
+        },
+        {
+          "command": "rasci.showPreviewToSide",
+          "when": "editorLangId == rasci"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "rasci.showPreviewToSide",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "editorLangId == rasci"
+      }
+    ]
+  },
+  "scripts": {
+    "generate": "node scripts/generate-grammar.mjs --ebnf ../standard/rasci.ebnf --map rasci.token-map --out syntaxes/rasci.tmLanguage.json",
+    "bundle": "node scripts/build-bundle.mjs --src ../../src",
+    "build": "npm run generate && npm run bundle",
+    "package": "npm run build && vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.9.0"
+  }
+}

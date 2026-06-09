@@ -1,0 +1,50 @@
+name: CI VSCode Extension
+
+on:
+  pull_request:
+    paths:
+      - "vscode-extension/**"
+      - "src/**"
+      - "standard/**"
+      - ".github/workflows/ci-vscode-extension.yml"
+      - ".github/workflows/release-vsix.yml"
+  push:
+    branches:
+      - main
+      - visual-studio-code-extension
+    paths:
+      - "vscode-extension/**"
+      - "src/**"
+      - "standard/**"
+      - ".github/workflows/ci-vscode-extension.yml"
+      - ".github/workflows/release-vsix.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-extension:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: vscode-extension/package-lock.json
+
+      - name: Install extension dependencies
+        working-directory: vscode-extension
+        run: npm ci
+
+      - name: Build extension bundle and grammar
+        working-directory: vscode-extension
+        run: npm run build
+
+      - name: Validate packaging
+        working-directory: vscode-extension
+        run: npm run package

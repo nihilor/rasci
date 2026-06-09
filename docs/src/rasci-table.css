@@ -5,6 +5,8 @@
   --rasci-bg-task: #ffffff;
   --rasci-text-primary: #24292f;
   --rasci-text-muted: #8c959f;
+  --rasci-text-subtle: #57606a;
+  --rasci-error: #cf222e;
 
   --rasci-r-bg: #fff8c5;
   --rasci-r-fg: #7d4e00;
@@ -18,30 +20,54 @@
   --rasci-i-fg: #57606a;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rasci-border: #3d444d;
+    --rasci-bg-corner: #161b22;
+    --rasci-bg-header: #1f2630;
+    --rasci-bg-task: #0d1117;
+    --rasci-text-primary: #e6edf3;
+    --rasci-text-muted: #9da7b3;
+    --rasci-text-subtle: #b1bac4;
+    --rasci-error: #ff7b72;
+
+    --rasci-r-bg: #4f3b00;
+    --rasci-r-fg: #f2cc60;
+    --rasci-a-bg: #5a1e17;
+    --rasci-a-fg: #ffb3a7;
+    --rasci-s-bg: #0f3a20;
+    --rasci-s-fg: #7ee787;
+    --rasci-c-bg: #0c2d4a;
+    --rasci-c-fg: #79c0ff;
+    --rasci-i-bg: #21262d;
+    --rasci-i-fg: #c9d1d9;
+  }
+}
+
 .rasci-wrapper {
   overflow-x: auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
+  font-size: 0.925em;
+  color-scheme: light dark;
 }
 
 .rasci-table {
   border-collapse: collapse;
   inline-size: 100%;
-  min-inline-size: 400px;
+  background: var(--rasci-bg-task);
+  color: var(--rasci-text-primary);
 }
 
 .rasci-table th,
 .rasci-table td {
   border: 1px solid var(--rasci-border);
-  padding: 5px 10px;
+  padding: 0.5em 1em;
   text-align: center;
-  white-space: nowrap;
 }
 
 .rasci-task-header,
 .rasci-task-label {
   text-align: left;
-  min-inline-size: 180px;
 }
 
 .rasci-corner {
@@ -51,9 +77,8 @@
 .rasci-group-header {
   background: var(--rasci-bg-header);
   font-weight: 600;
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: #57606a;
+  font-size: 0.875em;
+  color: var(--rasci-text-subtle);
 }
 
 .rasci-role-header {
@@ -74,7 +99,7 @@
 }
 
 .rasci-task-details {
-  margin-block-start: 4px;
+  margin-block-start: 0.25em;
 }
 
 .rasci-task-details summary {
@@ -82,8 +107,8 @@
 }
 
 .rasci-task-desc {
-  margin-block-start: 2px;
-  font-size: 11px;
+  margin-block-start: 0.125em;
+  font-size: 0.875em;
   color: var(--rasci-text-muted);
 }
 
@@ -92,12 +117,12 @@
   font-weight: 600;
   text-align: left;
   color: var(--rasci-text-primary);
-  padding: 4px 10px;
+  padding: 0.25em 0.625em;
 }
 
 .rasci-cell {
   font-weight: 500;
-  font-size: 12px;
+  font-size: 0.875em;
 }
 
 .rasci-empty {
@@ -109,12 +134,13 @@
   align-items: center;
   justify-content: center;
   block-size: 1.9em;
-  inline-size: 1.9em;
+  min-inline-size: 1.9em;
   margin: 0 .08em;
-  border-radius: 999px;
+  border-radius: 100em;
   border: 1px solid transparent;
   box-sizing: border-box;
   line-height: 1;
+  padding: 0.5em;
 }
 
 .rasci-R {
@@ -151,8 +177,8 @@
   color: inherit;
   opacity: .6;
   text-decoration: none;
-  margin-left: 4px;
-  font-size: 11px;
+  margin-left: 0.25em;
+  font-size: 0.875em;
 }
 
 .rasci-link:hover {
@@ -160,5 +186,5 @@
 }
 
 .rasci-error {
-  color: #cf222e;
+  color: var(--rasci-error);
 }

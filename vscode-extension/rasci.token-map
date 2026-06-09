@@ -1,0 +1,124 @@
+%%
+%% RASCI Grammar — TextMate Token Mapping
+%%
+%% This file connects EBNF rule names (from standard/rasci.ebnf) to
+%% TextMate scopes and regex patterns for syntax highlighting.
+%%
+%% The EBNF file itself remains untouched — it is the formal specification.
+%% This file is solely used by the grammar generator.
+%%
+%% Format:
+%%   rule <ebnf-rule-name>
+%%     token   <textmate-scope-suffix>   (becomes <suffix>.rasci)
+%%     pattern <regex>                   (JavaScript regex syntax)
+%%     order   <n>                       (priority; lower = matched first)
+%%     [label  <description>]            (optional, for documentation)
+%%
+
+%% ------------------------------------------------------------------
+%% Comments  (highest priority — override everything else)
+%% ------------------------------------------------------------------
+
+rule comment
+  token   comment.line
+  pattern %%(?!\{)[^\n]*
+  order   10
+  label   Line comment (%%)
+
+%% ------------------------------------------------------------------
+%% Strings
+%% ------------------------------------------------------------------
+
+rule string
+  token   string.quoted.double
+  pattern "[^"]*"
+  order   20
+  label   Double-quoted string literal
+
+%% ------------------------------------------------------------------
+%% RASCI attributes  (before alias — content inside [...])
+%% ------------------------------------------------------------------
+
+rule rasci-list
+  token   constant.language
+  pattern (?<=\[)[RASCI,]+(?=\])
+  order   30
+  label   RASCI attribute list inside square brackets
+
+%% ------------------------------------------------------------------
+%% Keywords  (before alias — keywords are a subset of IDENT)
+%% ------------------------------------------------------------------
+
+rule section-kw
+  token   keyword.control
+  pattern \b(roles|tasks|rules|group)\b
+  order   40
+  label   Section keywords
+
+rule meta-kw
+  token   keyword.other
+  pattern \b(desc|link)\b
+  order   41
+  label   Metadata keywords
+
+%% ------------------------------------------------------------------
+%% List marker  (- at the start of a line, used in the rules section)
+%% ------------------------------------------------------------------
+
+rule list-marker
+  token   punctuation.definition.list
+  pattern ^\s*-(?=\s)
+  order   50
+  label   List marker in the rules section
+
+%% ------------------------------------------------------------------
+%% Role reference in assignments  (alias immediately followed by [)
+%% ------------------------------------------------------------------
+
+rule assignment-role
+  token   entity.name.function
+  pattern \b[A-Z][A-Z0-9_]*(?=\s*\[)
+  order   60
+  label   Alias directly before a square bracket (assignment)
+
+%% ------------------------------------------------------------------
+%% Alias / task-id  (generic — after the more specific rules above)
+%% ------------------------------------------------------------------
+
+rule alias
+  token   entity.name.tag
+  pattern \b[A-Z][A-Z0-9_]*\b
+  order   70
+  label   Role alias or task id
+
+%% ------------------------------------------------------------------
+%% Numbers  (used in the future rules section)
+%% ------------------------------------------------------------------
+
+rule number
+  token   constant.numeric
+  pattern \b[0-9]+\b
+  order   80
+  label   Numeric value
+
+%% ------------------------------------------------------------------
+%% Punctuation
+%% ------------------------------------------------------------------
+
+rule colon
+  token   punctuation.separator
+  pattern :
+  order   90
+  label   Colon
+
+rule bracket
+  token   punctuation.definition.bracket
+  pattern [\[\]]
+  order   91
+  label   Square brackets
+
+rule comma
+  token   punctuation.separator
+  pattern ,
+  order   92
+  label   Comma

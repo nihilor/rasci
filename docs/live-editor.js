@@ -56,6 +56,7 @@ const btnCopyJson = document.getElementById("btn-copy-json");
 let lastMarkdown = "";
 let lastJson = "";
 const previewCssHref = new URL("./rasci.css", window.location.href).href;
+const previewTableCssHref = new URL("./src/rasci-table.css", window.location.href).href;
 
 function renderJSON(diagram) {
     const matrix = normalize(diagram);
@@ -113,6 +114,7 @@ function createHtmlDocument(fragment) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RASCI Preview</title>
   <link rel="stylesheet" href="${previewCssHref}">
+  <link rel="stylesheet" href="${previewTableCssHref}">
 </head>
 <body class="preview-body">
 ${fragment}

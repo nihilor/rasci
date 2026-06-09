@@ -20,6 +20,8 @@ for embedding examples and the [RASCI Live Editor](https://nihilor.github.io/ras
 [![Socket Badge](https://badge.socket.dev/npm/package/rasci/0.3.0)](https://badge.socket.dev/npm/package/rasci/0.3.0)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/nihilor/rasci/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/rasci.svg)](https://badge.fury.io/js/rasci)
+[![CI VSCode Extension](https://github.com/nihilor/rasci/actions/workflows/ci-vscode-extension.yml/badge.svg?branch=main)](https://github.com/nihilor/rasci/actions/workflows/ci-vscode-extension.yml)
+[![Release VSIX](https://github.com/nihilor/rasci/actions/workflows/release-vsix.yml/badge.svg)](https://github.com/nihilor/rasci/actions/workflows/release-vsix.yml)
 
 ## Why
 
@@ -82,6 +84,7 @@ rasci <input.rasci> [options]
 | `-t, --title <text>` | Document title | filename without extension |
 | `--no-role-groups` | Suppress role group header row | — |
 | `--no-role-labels` | Suppress role name tooltips | — |
+| `--show-aliases-only` | Show only role aliases, hide labels | — |
 | `-h, --help` | Show help | — |
 
 ### Examples
@@ -98,6 +101,9 @@ rasci matrix.rasci -f json | jq '.matrix[] | select(.group == "Discovery")'
 
 # Render without role group headers
 rasci matrix.rasci -f html --no-role-groups -o matrix.html
+
+# Render showing only role aliases
+rasci matrix.rasci -f html --show-aliases-only -o matrix.html
 ```
 
 ### Multi format example
@@ -326,9 +332,9 @@ You choose the format with `-f, --format`.
 
 ### HTML
 
-A self-contained `<table>` with embedded CSS. Role group headers span their
-respective columns; task group headers span all columns. RASCI cells are
-colour-coded. No external dependencies.
+A `<table>` fragment styled via `rasci-table.css`. Role group headers span
+their respective columns; task group headers span all columns. RASCI cells are
+colour-coded.
 
 ```bash
 rasci matrix.rasci -f html -o matrix.html

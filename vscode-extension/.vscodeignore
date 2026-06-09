@@ -1,0 +1,9 @@
+# Build inputs — not needed at runtime
+scripts/
+node_modules/
+
+# Dev docs
+README.developers.md
+
+# Build artefacts left from local packaging
+*.vsix

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "RASCI in Markdown",
+  "scopeName": "markdown.rasci.codeblock",
+  "injectionSelector": "L:text.html.markdown",
+  "patterns": [
+    {
+      "include": "#rasci-block"
+    }
+  ],
+  "repository": {
+    "rasci-block": {
+      "begin": "^(\\s*`{3,})(rasci)\\s*$",
+      "end": "^(\\s*`{3,})\\s*$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.fenced.markdown"
+        },
+        "2": {
+          "name": "entity.name.function.fenced.markdown"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.fenced.markdown"
+        }
+      },
+      "contentName": "meta.embedded.block.rasci",
+      "patterns": [
+        {
+          "include": "source.rasci"
+        }
+      ]
+    }
+  }
+}

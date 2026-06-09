@@ -84,6 +84,7 @@ rasci <input.rasci> [options]
 | `-t, --title <text>` | Document title | filename without extension |
 | `--no-role-groups` | Suppress role group header row | — |
 | `--no-role-labels` | Suppress role name tooltips | — |
+| `--show-aliases-only` | Show only role aliases, hide labels | — |
 | `-h, --help` | Show help | — |
 
 ### Examples
@@ -100,6 +101,9 @@ rasci matrix.rasci -f json | jq '.matrix[] | select(.group == "Discovery")'
 
 # Render without role group headers
 rasci matrix.rasci -f html --no-role-groups -o matrix.html
+
+# Render showing only role aliases
+rasci matrix.rasci -f html --show-aliases-only -o matrix.html
 ```
 
 ### Multi format example

@@ -326,9 +326,9 @@ You choose the format with `-f, --format`.
 
 ### HTML
 
-A self-contained `<table>` with embedded CSS. Role group headers span their
-respective columns; task group headers span all columns. RASCI cells are
-colour-coded. No external dependencies.
+A `<table>` fragment styled via `rasci-table.css`. Role group headers span
+their respective columns; task group headers span all columns. RASCI cells are
+colour-coded.
 
 ```bash
 rasci matrix.rasci -f html -o matrix.html

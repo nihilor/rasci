@@ -17,11 +17,11 @@ import { normalize } from "./renderer.html.js"
 
 /**
  * @param {import("./parser.js").RasciDiagram} diagram
- * @param {{ title?: string }} [options]
+ * @param {{ title?: string, showAliasesOnly?: boolean }} [options]
  * @returns {string}
  */
-export function renderMarkdown(diagram, options = {}) {
-  const { title = "RASCI-Matrix" } = options
+export function renderMarkdown (diagram, options = {}) {
+  const { title = "RASCI-Matrix", showAliasesOnly = false } = options
   const matrix = normalize(diagram)
   const { roles, groups } = matrix
 
@@ -55,16 +55,16 @@ export function renderMarkdown(diagram, options = {}) {
   const hasRoleGroups  = roleGroupSpans.some(s => s.label)
 
   if (hasRoleGroups) {
-    lines.push("### Roles")
+    lines.push("### Roles", "")
     for (const span of roleGroupSpans) {
       if (!span.label) continue
-      const members = span.roles.map(r => `**${r.alias}** ${r.label}`).join(", ")
+      const members = span.roles.map(r => `${r.alias !== r.label ? `**${r.alias}** `: ""}${r.label}`).join(", ")
       lines.push(`- **${span.label}:** ${members}`)
     }
     // Flat roles without grouping (if any)
     const ungrouped = roles.filter(r => !r.group.length)
     if (ungrouped.length) {
-      lines.push(`- ${ungrouped.map(r => `**${r.alias}** ${r.label}`).join(", ")}`)
+      lines.push(`- ${ungrouped.map(r => `${r.alias !== r.label ? `**${r.alias}** `: ""}${r.label}`).join(", ")}`)
     }
     lines.push("")
   }
@@ -79,7 +79,7 @@ export function renderMarkdown(diagram, options = {}) {
   )
   const roleColW = Math.max(
     3,
-    ...roles.map(r => r.alias.length)
+    ...roles.map(r => showAliasesOnly ? r.alias.length : `${r.alias} ${r.label}`.length)
   )
   const descColW = Math.max(
     4, // "Desc"
@@ -98,8 +98,10 @@ export function renderMarkdown(diagram, options = {}) {
   for (const group of groups) {
     if (group.label) {
       const groupLink = group.meta.link ? ` [↗](${group.meta.link})` : ""
-      const groupDesc = group.meta.desc ? `\n_${group.meta.desc}_` : ""
-      lines.push(`## ${group.label}${groupLink}${groupDesc}`, "")
+      const groupDesc = group.meta.desc ? `\n_${group.meta.desc}_` : false
+      lines.push(`## ${group.label}${groupLink}`)
+      if (groupDesc) lines.push(groupDesc)
+      lines.push("")
     }
  
     // Description column only if at least one task has a description (otherwise this would add unnecessary clutter)
@@ -108,7 +110,7 @@ export function renderMarkdown(diagram, options = {}) {
     const headerRow = [
       `| ${pad("Task", taskColW)} `,
       ...(hasDesc ? [`| ${pad("Description", descColW)} `] : []),
-      ...roles.map(r => `| ${cpad(r.alias, roleColW)} `),
+      ...roles.map(r => `| ${cpad(showAliasesOnly ? r.alias : `${r.label} ${r.alias !== r.label ? `(${r.alias})` : ""}`, roleColW)} `),
       "|",
     ].join("")
  
@@ -148,7 +150,6 @@ export function renderMarkdown(diagram, options = {}) {
   // Footnotes
   // ------------------------------------------------------------------
   if (notes.length) {
-    lines.push("---", "")
     for (const [id, url] of notes) {
       lines.push(`[^${id}]: ${url}`)
     }
@@ -162,7 +163,7 @@ export function renderMarkdown(diagram, options = {}) {
 // Helper function: Role group spans (with role objects)
 // ---------------------------------------------------------------------------
 
-function buildRoleGroupSpans(roles) {
+function buildRoleGroupSpans (roles) {
   const spans = []
   let current = null
   for (const role of roles) {

@@ -171,12 +171,55 @@ function buildWebviewHTML(source, title) {
       padding:     1.5rem 2rem;
       margin:      0;
     }
-    h1 {
-      font-size:   14px;
-      font-weight: 500;
-      margin:      0 0 1.25rem;
-      opacity:     0.7;
+
+    /* Force renderer table tokens to track VS Code theme classes.
+       The renderer injects its own :root palette; body-level variables override it in the webview tree. */
+    body.vscode-light,
+    body.vscode-high-contrast-light {
+      --rasci-border: #d0d7de;
+      --rasci-bg-corner: #f6f8fa;
+      --rasci-bg-header: #eef2f6;
+      --rasci-bg-task: #ffffff;
+      --rasci-text-primary: #24292f;
+      --rasci-text-muted: #8c959f;
+      --rasci-text-subtle: #57606a;
+      --rasci-error: #cf222e;
+
+      --rasci-r-bg: #fff8c5;
+      --rasci-r-fg: #7d4e00;
+      --rasci-a-bg: #ffebe9;
+      --rasci-a-fg: #953800;
+      --rasci-s-bg: #dafbe1;
+      --rasci-s-fg: #116329;
+      --rasci-c-bg: #ddf4ff;
+      --rasci-c-fg: #0a3069;
+      --rasci-i-bg: #f6f8fa;
+      --rasci-i-fg: #57606a;
     }
+
+    body.vscode-dark,
+    body.vscode-high-contrast {
+      --rasci-border: #3d444d;
+      --rasci-bg-corner: #161b22;
+      --rasci-bg-header: #1f2630;
+      --rasci-bg-task: #0d1117;
+      --rasci-text-primary: #e6edf3;
+      --rasci-text-muted: #9da7b3;
+      --rasci-text-subtle: #b1bac4;
+      --rasci-error: #ff7b72;
+
+      --rasci-r-bg: #4f3b00;
+      --rasci-r-fg: #f2cc60;
+      --rasci-a-bg: #5a1e17;
+      --rasci-a-fg: #ffb3a7;
+      --rasci-s-bg: #0f3a20;
+      --rasci-s-fg: #7ee787;
+      --rasci-c-bg: #0c2d4a;
+      --rasci-c-fg: #79c0ff;
+      --rasci-i-bg: #21262d;
+      --rasci-i-fg: #c9d1d9;
+    }
+
     .error-block {
       border-left:   3px solid var(--vscode-errorForeground, #f44);
       padding:       0.75rem 1rem;
@@ -201,6 +244,7 @@ function buildWebviewHTML(source, title) {
       border-collapse: collapse;
       font-size:       12px;
       min-width:       400px;
+      width:           100%;
     }
     .rasci-table th,
     .rasci-table td {
@@ -231,13 +275,26 @@ function buildWebviewHTML(source, title) {
       padding:     3px 10px;
       opacity:     .85;
     }
+    .rasci-attr {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      block-size: 1.9em;
+      min-inline-size: 1.9em;
+      margin: 0 .08em;
+      border-radius: 100em;
+      border: 1px solid transparent;
+      box-sizing: border-box;
+      line-height: 1;
+      padding: 0.5em;
+    }
     .rasci-cell  { font-weight: 500; font-size: 11px; }
     .rasci-empty { opacity: .3; }
-    .rasci-R     { background: rgba(234,174,57,.18);  color: #d4aa44; }
-    .rasci-A     { background: rgba(224,108,108,.18); color: #e06c6c; }
-    .rasci-S     { background: rgba(80,200,120,.15);  color: #50c878; }
-    .rasci-C     { background: rgba(86,156,214,.15);  color: #569cd6; }
-    .rasci-I     { background: rgba(128,128,128,.12); color: #888;    }
+    .rasci-R     { background: rgba(234,174,57,.18);  color: #d4aa44; border-color: var(--rasci-r-fg); }
+    .rasci-A     { background: rgba(224,108,108,.18); color: #e06c6c; border-color: var(--rasci-a-fg); }
+    .rasci-S     { background: rgba(80,200,120,.15);  color: #50c878; border-color: var(--rasci-s-fg); }
+    .rasci-C     { background: rgba(86,156,214,.15);  color: #569cd6; border-color: var(--rasci-c-fg); }
+    .rasci-I     { background: rgba(128,128,128,.12); color: #888;    border-color: var(--rasci-i-fg); }
     .rasci-link  {
       color:           var(--vscode-textLink-foreground, #3794ff);
       opacity:         .7;
@@ -249,7 +306,6 @@ function buildWebviewHTML(source, title) {
   </style>
 </head>
 <body>
-  <h1>${esc(title)}</h1>
   ${content}
 </body>
 </html>`

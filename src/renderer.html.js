@@ -75,11 +75,11 @@ function buildRows(tasks, roles) {
 
 /**
  * @param {import("./parser.js").RasciDiagram} diagram
- * @param {{ showRoleGroups?: boolean, showRoleLabels?: boolean }} [options]
+ * @param {{ showRoleGroups?: boolean, showRoleLabels?: boolean, showAliasesOnly?: boolean }} [options]
  * @returns {string}  HTML string (table fragment without a document wrapper)
  */
 export function renderHTMLTable(diagram, options = {}) {
-  const { showRoleGroups = true, showRoleLabels = true } = options
+  const { showRoleGroups = true, showRoleLabels = true, showAliasesOnly = false } = options
   const matrix = normalize(diagram)
   const { roles, groups } = matrix
 
@@ -115,7 +115,8 @@ export function renderHTMLTable(diagram, options = {}) {
   lines.push(`<th class="rasci-task-header">Task</th>`)
   for (const role of roles) {
     const title = showRoleLabels ? ` title="${esc(role.label)}"` : ""
-    lines.push(`<th class="rasci-role-header"${title}>${esc(role.alias)}</th>`)
+    const content = showAliasesOnly ? esc(role.alias) : esc(`${role.label}${role.alias !== role.label ? ` (${role.alias})` : ""}`)
+    lines.push(`<th class="rasci-role-header"${title}>${content}</th>`)
   }
   lines.push(`</tr>`)
   lines.push(`</thead>`)

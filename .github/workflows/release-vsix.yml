@@ -45,17 +45,6 @@ jobs:
             echo "name=manual-${ts}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          release_name: ${{ steps.meta.outputs.name }}
-          draft: false
-          prerelease: false
-
       - name: Resolve VSIX artifact
         id: vsix
         shell: bash
@@ -68,13 +57,16 @@ jobs:
           echo "path=${vsix_file}" >> "$GITHUB_OUTPUT"
           echo "name=$(basename "$vsix_file")" >> "$GITHUB_OUTPUT"
 
-      - name: Upload VSIX asset
-        id: upload_vsix
-        uses: actions/upload-release-asset@v1
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.vsix.outputs.path }}
-          asset_name: ${{ steps.vsix.outputs.name }}
-          asset_content_type: application/octet-stream
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.name }}
+          draft: false
+          prerelease: false
+          files: ${{ steps.vsix.outputs.path }}
+          overwrite_files: true
+          fail_on_unmatched_files: true
+          append_body: true

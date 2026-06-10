@@ -35,6 +35,16 @@ accountabilities, and inconsistent assignments. This helps maintain the integrit
 a source of truth for team responsibilities. Also this benefits companies with strict compliance requirements,
 where an incorrect RASCI/RACI matrix could lead to audit failures or legal issues.
 
+Validation results are severity-based and returned as `infos`, `warnings`, and `errors`.
+Consumers can decide how strict they want to be with warnings.
+
+Current default rule mapping:
+
+- Error: unknown role alias used in a task assignment
+- Error: duplicate role alias declarations
+- Warning: duplicate task IDs
+- Warning: multiple Accountable (`A`) roles on one task
+
 ## Installation
 
 Just clone the repository or install the package from `npm` locally or globally:
@@ -325,6 +335,10 @@ PO[A,R]   %% Product Owner is both Accountable and Responsible
 The cell is coloured by the **first** attribute, it multi attributes are assigned. Every alias must be declared
 in the `roles:` section; undeclared aliases are a validation error.
 
+> [!NOTE]
+> A task with multiple Accountable (`A`) roles is considered a validation warning, not a hard error.
+> This allows intentional multi-accountable use cases while still surfacing a policy hint.
+
 ## Output formats
 
 The CLI currently supports three output formats: HTML, Markdown, and JSON.
@@ -398,10 +412,16 @@ tasks:
 
 - `no-role-groups`: hides grouped role header row
 - `no-role-labels`: hides role-label tooltips in column headers
+- `show-aliases-only`: hides role labels, shows only aliases in column headers
+- `validation-mode`: controls validation behaviour (`strict`, `warn`, `ignore`)
 
 The element reads the RASCI DSL from its text content, parses it with
 [src/parser.js](src/parser.js), validates it, and renders the table via a
 table-only renderer path in [src/renderer.html.js](src/renderer.html.js).
+
+Validation mode defaults to `strict` (validation errors are shown and rendering
+is skipped). Use `validation-mode="warn"` to render and show validation warnings,
+or `validation-mode="ignore"` to render without validation messages.
 
 It also ships with a default stylesheet in [src/rasci-table.css](src/rasci-table.css).
 Use it as-is, override parts of it, or leave it out entirely if you want to style everything yourself.

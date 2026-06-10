@@ -126,7 +126,8 @@ function activate(context) {
 function updatePanel(panel, document) {
   const source = document.getText()
   const title  = path.basename(document.fileName, ".rasci")
-  panel.webview.html = buildWebviewHTML(source, title)
+  const validationMode = getPreviewValidationMode(document)
+  panel.webview.html = buildWebviewHTML(source, title, validationMode)
 }
 
 /**
@@ -135,22 +136,34 @@ function updatePanel(panel, document) {
  *
  * @param {string} source
  * @param {string} title
+ * @param {"strict"|"warn"|"ignore"} validationMode
  * @returns {string}
  */
-function buildWebviewHTML(source, title) {
+function buildWebviewHTML(source, title, validationMode = "warn") {
   let content
 
   try {
     const diagram = parse(source)
-    const { valid, errors } = validate(diagram)
+    const report = validate(diagram)
+    const hasErrors = report.errors.length > 0
+    const hasWarnings = report.warnings.length > 0
+    const hasInfos = report.infos.length > 0
+    const hasIssues = hasErrors || hasWarnings || hasInfos
+    const rendered = renderHTML(diagram, { showRoleGroups: true, showRoleLabels: true })
 
-    if (!valid) {
-      content = errorBlock("Validation errors", errors)
+    if (hasErrors && validationMode === "strict") {
+      content = issueBlock("Validation errors", report.errors, "error")
+    } else if (hasIssues && validationMode === "warn") {
+      const blocks = []
+      if (hasErrors) blocks.push(issueBlock("Validation errors", report.errors, "error"))
+      if (hasWarnings) blocks.push(issueBlock("Validation warnings", report.warnings, "warning"))
+      if (hasInfos) blocks.push(issueBlock("Validation info", report.infos, "warning"))
+      content = `${blocks.join("\n")}\n${rendered}`
     } else {
-      content = renderHTML(diagram, { showRoleGroups: true, showRoleLabels: true })
+      content = rendered
     }
   } catch (e) {
-    content = errorBlock("Parse error", [e.message])
+    content = issueBlock("Parse error", [e.message], "error")
   }
 
   return /* html */`<!DOCTYPE html>
@@ -237,6 +250,24 @@ function buildWebviewHTML(source, title) {
       font-family: var(--vscode-editor-font-family, monospace);
       margin: 2px 0;
     }
+    .warning-block {
+      border-left:   3px solid #d29922;
+      padding:       0.75rem 1rem;
+      background:    rgba(210,153,34,0.12);
+      border-radius: 3px;
+      font-size:     12px;
+      margin-bottom: 0.5rem;
+    }
+    .warning-block strong {
+      display:       block;
+      margin-bottom: 0.4rem;
+      color:         #7d4e00;
+    }
+    .warning-block ul { margin: 0; padding-left: 1.2rem; }
+    .warning-block li {
+      font-family: var(--vscode-editor-font-family, monospace);
+      margin: 2px 0;
+    }
 
     /* RASCI table — VS Code theme variables */
     .rasci-wrapper { overflow-x: auto; }
@@ -311,9 +342,10 @@ function buildWebviewHTML(source, title) {
 </html>`
 }
 
-function errorBlock(heading, messages) {
+function issueBlock(heading, messages, kind = "error") {
   const items = messages.map(m => `<li>${esc(m)}</li>`).join("\n      ")
-  return `<div class="error-block">
+  const cls = kind === "warning" ? "warning-block" : "error-block"
+  return `<div class="${cls}">
     <strong>${esc(heading)}</strong>
     <ul>${items}</ul>
   </div>`
@@ -325,6 +357,17 @@ function esc(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
+}
+
+/**
+ * @param {vscode.TextDocument} document
+ * @returns {"strict"|"warn"|"ignore"}
+ */
+function getPreviewValidationMode(document) {
+  const cfg = vscode.workspace.getConfiguration("rasci", document.uri)
+  const mode = String(cfg.get("preview.validationMode", "warn")).toLowerCase()
+  if (mode === "strict" || mode === "warn" || mode === "ignore") return mode
+  return "warn"
 }
 
 // ---------------------------------------------------------------------------

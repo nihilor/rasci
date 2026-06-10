@@ -1,6 +1,6 @@
 {
   "name": "rasci",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Parser and renderer for the RASCI DSL. Converts .rasci to HTML, Markdown and JSON.",
   "type": "module",
   "exports": {

@@ -2,7 +2,7 @@
   "name": "rasci-language",
   "displayName": "RASCI DSL",
   "description": "Syntax highlighting and live preview for .rasci files and rasci code blocks in Markdown",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "publisher": "nihilor",
   "engines": {
     "vscode": "^1.75.0"
@@ -95,7 +95,22 @@
         "mac": "cmd+shift+v",
         "when": "editorLangId == rasci"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "RASCI",
+      "properties": {
+        "rasci.preview.validationMode": {
+          "type": "string",
+          "enum": [
+            "strict",
+            "warn",
+            "ignore"
+          ],
+          "default": "warn",
+          "markdownDescription": "Controls how preview handles semantic validation errors. `strict` shows only the validation errors, `warn` renders and shows warnings, `ignore` renders without validation messages. Parse errors always stop rendering."
+        }
+      }
+    }
   },
   "scripts": {
     "generate": "node scripts/generate-grammar.mjs --ebnf ../standard/rasci.ebnf --map rasci.token-map --out syntaxes/rasci.tmLanguage.json",

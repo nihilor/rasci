@@ -13,7 +13,7 @@ This extension provides language support and live preview for the RASCI DSL.
 - Live HTML preview for RASCI files
 - Preview commands in Command Palette and editor title bar
 - Auto-refresh preview on document changes
-- Inline parse and validation errors in the preview panel
+- Inline parse errors and configurable validation handling in the preview panel
 
 ## Quick Start
 
@@ -34,6 +34,15 @@ This extension provides language support and live preview for the RASCI DSL.
 - Windows/Linux: `Ctrl+Shift+V`
 
 Available when the active editor language is `rasci`.
+
+## Settings
+
+- `rasci.preview.validationMode`:
+  - `warn` (default): render preview and show validation warnings
+  - `strict`: show validation errors only, skip rendering
+  - `ignore`: render preview without validation messages
+
+Parse errors always stop rendering.
 
 ## RASCI in Markdown
 

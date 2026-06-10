@@ -59,54 +59,58 @@ const previewCssHref = new URL("./rasci.css", window.location.href).href;
 const previewTableCssHref = new URL("./src/rasci-table.css", window.location.href).href;
 
 function renderJSON(diagram) {
-    const matrix = normalize(diagram);
-    const flatMatrix = matrix.groups.flatMap(group =>
+  const matrix = normalize(diagram);
+  const flatMatrix = matrix.groups.flatMap(group =>
     group.tasks.map(row => ({
-        group: group.label || null,
-        taskId: row.task.id,
-        taskLabel: row.task.label,
-        meta: row.task.meta,
-        assignments: Object.fromEntries(
+      group: group.label || null,
+      taskId: row.task.id,
+      taskLabel: row.task.label,
+      meta: row.task.meta,
+      assignments: Object.fromEntries(
         [...row.cells.entries()]
-            .filter(([, attrs]) => attrs.length)
-            .map(([alias, attrs]) => [alias, attrs])
-        ),
+          .filter(([, attrs]) => attrs.length)
+          .map(([alias, attrs]) => [alias, attrs])
+      ),
     }))
-    );
+  );
 
-    return JSON.stringify({
-    roles: flatRoles(diagram.roles),
-    tasks: flatTasks(diagram.tasks),
-    matrix: flatMatrix,
-    }, null, 2);
+  return JSON.stringify(
+    {
+      roles: flatRoles(diagram.roles),
+      tasks: flatTasks(diagram.tasks),
+      matrix: flatMatrix,
+    },
+    null,
+    2
+  );
 }
 
 function setStatus(message, kind = "ok") {
-    status.textContent = message;
-    status.className = `status ${kind}`;
+  status.textContent = message;
+  status.className = `status ${kind}`;
 }
 
 function showPane(name) {
-    tabs.forEach(tab => {
+  tabs.forEach(tab => {
     const selected = tab.dataset.pane === name;
     tab.setAttribute("aria-selected", String(selected));
-    });
+  });
 
-    document.querySelectorAll(".preview-pane").forEach(el => el.classList.remove("active"));
-    document.getElementById(`pane-${name}`).classList.add("active");
+  document.querySelectorAll(".preview-pane").forEach(el => el.classList.remove("active"));
+  document.getElementById(`pane-${name}`).classList.add("active");
 }
 
-  function updateLineNumbers() {
-    const lineCount = input.value.split("\n").length || 1;
-    lineNumbers.textContent = Array.from({ length: lineCount }, (_, i) => String(i + 1)).join("\n");
-  }
+function updateLineNumbers() {
+  const lineCount = input.value.split("\n").length || 1;
+  lineNumbers.textContent = Array.from({ length: lineCount }, (_, i) => String(i + 1)).join("\n");
+}
 
-  function syncLineNumberScroll() {
-    lineNumbers.scrollTop = input.scrollTop;
-  }
+function syncLineNumberScroll() {
+  lineNumbers.scrollTop = input.scrollTop;
+}
 
 function createHtmlDocument(fragment) {
-    return `<!doctype html>
+  return `<!doctype html>
 <html lang="en">
 <head>
   <base href="${window.location.href}">
@@ -123,7 +127,7 @@ ${fragment}
 }
 
 function formatInput(text) {
-    return text
+  return text
     .replace(/\r\n/g, "\n")
     .replace(/\t/g, "  ")
     .replace(/[ \t]+\n/g, "\n")
@@ -131,24 +135,19 @@ function formatInput(text) {
 }
 
 async function copyText(text) {
-    try {
+  try {
     await navigator.clipboard.writeText(text);
     setStatus("Copied to clipboard.", "ok");
-    } catch {
+  } catch {
     setStatus("Clipboard access failed. Copy manually from the output pane.", "error");
-    }
+  }
 }
 
 function render() {
-    try {
+  try {
     const source = input.value;
     const diagram = parse(source);
-    const checked = validate(diagram);
-
-    if (!checked.valid) {
-        setStatus(`Validation failed:\n- ${checked.errors.join("\n- ")}`, "error");
-        return;
-    }
+    const report = validate(diagram);
 
     const htmlFragment = renderHTML(diagram);
     const markdown = renderMarkdown(diagram, { title: "RASCI-Matrix" });
@@ -161,33 +160,45 @@ function render() {
     lastMarkdown = markdown;
     lastJson = json;
 
-    setStatus("Parsed and rendered successfully.", "ok");
-    } catch (error) {
-    setStatus(error?.message || String(error), "error");
+    if (report.errors.length) {
+      setStatus(`Validation errors:\n- ${report.errors.join("\n- ")}`, "error");
+    } else if (report.warnings.length) {
+      setStatus(`Validation warnings:\n- ${report.warnings.join("\n- ")}`, "warning");
+    } else if (report.infos.length) {
+      setStatus(`Validation info:\n- ${report.infos.join("\n- ")}`, "ok");
+    } else {
+      setStatus("Parsed and rendered successfully.", "ok");
     }
+  } catch (error) {
+    setStatus(error?.message || String(error), "error");
+  }
 }
 
 tabs.forEach(tab => {
-    tab.addEventListener("click", () => showPane(tab.dataset.pane));
+  tab.addEventListener("click", () => showPane(tab.dataset.pane));
 });
 
 input.addEventListener("input", updateLineNumbers);
 input.addEventListener("scroll", syncLineNumberScroll);
 
-btnRender.addEventListener("click", render);
-
-btnReset.addEventListener("click", () => {
-    input.value = STARTER;
+btnRender.addEventListener("click", () => {
   updateLineNumbers();
   syncLineNumberScroll();
-    render();
+  render();
+});
+
+btnReset.addEventListener("click", () => {
+  input.value = STARTER;
+  updateLineNumbers();
+  syncLineNumberScroll();
+  render();
 });
 
 btnFormat.addEventListener("click", () => {
-    input.value = formatInput(input.value);
+  input.value = formatInput(input.value);
   updateLineNumbers();
   syncLineNumberScroll();
-    render();
+  render();
 });
 
 btnCopyMd.addEventListener("click", () => copyText(lastMarkdown));

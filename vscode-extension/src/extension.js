@@ -143,7 +143,7 @@ function buildWebviewHTML(source, title, validationMode = "warn") {
   let content
 
   try {
-    const diagram = parse(source)
+    const diagram = parse(normalizePreviewSource(source))
     const report = validate(diagram)
     const hasErrors = report.errors.length > 0
     const hasWarnings = report.warnings.length > 0
@@ -357,6 +357,22 @@ function esc(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
+}
+
+/**
+ * Keep preview parsing robust even when the bundled parser version lags.
+ * Mirrors parser comment behavior: anything after %% on a line is ignored.
+ *
+ * @param {string} source
+ * @returns {string}
+ */
+function normalizePreviewSource(source) {
+  return String(source ?? "")
+    .replace(/^\uFEFF/, "")
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map(line => line.replace(/%%.*$/, ""))
+    .join("\n")
 }
 
 /**

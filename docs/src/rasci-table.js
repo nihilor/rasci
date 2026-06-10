@@ -5,7 +5,7 @@ const tableCssHref = new URL("./rasci-table.css", import.meta.url).href
 
 class RasciTableElement extends HTMLElement {
   static get observedAttributes() {
-    return ["no-role-groups", "no-role-labels", "show-aliases-only"]
+    return ["no-role-groups", "no-role-labels", "show-aliases-only", "validation-mode"]
   }
 
   constructor() {
@@ -35,7 +35,14 @@ class RasciTableElement extends HTMLElement {
     return {
       showRoleGroups: !this.hasAttribute("no-role-groups"),
       showRoleLabels: !this.hasAttribute("no-role-labels"),
+      validationMode: this.validationMode,
     }
+  }
+
+  get validationMode() {
+    const mode = (this.getAttribute("validation-mode") ?? "strict").toLowerCase()
+    if (mode === "warn" || mode === "ignore" || mode === "strict") return mode
+    return "strict"
   }
 
   render() {
@@ -48,18 +55,47 @@ class RasciTableElement extends HTMLElement {
     }
 
     try {
+      const options = this.options
       const diagram = parse(source)
-      const { valid, errors } = validate(diagram)
-      if (!valid) {
-        throw new Error(errors.join("\n"))
+      const report = validate(diagram)
+      const hasErrors = report.errors.length > 0
+      const hasIssues = report.errors.length > 0 || report.warnings.length > 0 || report.infos.length > 0
+
+      if (hasErrors && options.validationMode === "strict") {
+        throw new Error(report.errors.join("\n"))
       }
 
-      this.shadowRoot.innerHTML = `${tableStyle}${renderHTMLTable(diagram, this.options)}`
+      const warning = hasIssues && options.validationMode === "warn"
+        ? validationBlock(report)
+        : ""
+
+      this.shadowRoot.innerHTML = `${tableStyle}${warning}${renderHTMLTable(diagram, options)}`
     } catch (error) {
       const msg = error?.message ?? String(error)
       this.shadowRoot.innerHTML = `${tableStyle}<div class="rasci-wrapper"><pre style="white-space: pre-wrap; color: #cf222e;">${escapeHTML(msg)}</pre></div>`
     }
   }
+}
+
+function validationBlock(report) {
+  const lines = []
+
+  if (report.errors.length) {
+    const items = report.errors.map(err => `<li>${escapeHTML(err)}</li>`).join("\n")
+    lines.push(`<strong style="display:block; margin-bottom:.35rem; color:#953800;">Validation errors</strong><ul style="margin:0 0 .5rem 0; padding-left:1.2rem;">${items}</ul>`)
+  }
+
+  if (report.warnings.length) {
+    const items = report.warnings.map(warn => `<li>${escapeHTML(warn)}</li>`).join("\n")
+    lines.push(`<strong style="display:block; margin-bottom:.35rem;">Validation warnings</strong><ul style="margin:0; padding-left:1.2rem;">${items}</ul>`)
+  }
+
+  if (report.infos.length) {
+    const items = report.infos.map(info => `<li>${escapeHTML(info)}</li>`).join("\n")
+    lines.push(`<strong style="display:block; margin:.5rem 0 .35rem 0;">Validation info</strong><ul style="margin:0; padding-left:1.2rem;">${items}</ul>`)
+  }
+
+  return `<div class="rasci-wrapper"><div style="margin-bottom: .75rem; border-left: 3px solid #d29922; padding: .6rem .8rem; background: rgba(210,153,34,.12);">${lines.join("")}</div></div>`
 }
 
 /** Essential, otherwise we get in trouble */

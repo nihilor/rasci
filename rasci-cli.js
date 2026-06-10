@@ -207,10 +207,14 @@ try {
   die(e.message)
 }
 
-const { valid, errors } = validate(diagram)
-if (!valid) {
+const report = validate(diagram)
+if (report.warnings.length) {
+  console.error("[rasci-cli] Validation warnings:")
+  report.warnings.forEach(w => console.error("  " + w))
+}
+if (!report.valid) {
   console.error("[rasci-cli] Validation errors:")
-  errors.forEach(e => console.error("  " + e))
+  report.errors.forEach(e => console.error("  " + e))
   process.exit(1)
 }
 

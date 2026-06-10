@@ -449,9 +449,11 @@ function consumeIndentedLine(ts, expectedDepth) {
  *  4. A-rule                   — each task can have at most one Accountable
  *
  * @param {RasciDiagram} diagram
- * @returns {{ valid: boolean, errors: string[] }}
+ * @returns {{ valid: boolean, infos: string[], warnings: string[], errors: string[] }}
  */
 export function validate(diagram) {
+  const infos = []
+  const warnings = []
   const errors = []
 
   // (1), (2) Role aliases ---
@@ -487,11 +489,11 @@ export function validate(diagram) {
     const accountable = task.assignments.filter(a => a.attrs.includes("A"))
     if (accountable.length > 1) {
       const names = accountable.map(a => `"${a.roleAlias}"`).join(", ")
-      errors.push(`Task "${task.label}": multiple Accountable (A) assigned — ${names}`)
+      warnings.push(`Task "${task.label}": multiple Accountable (A) assigned — ${names}`)
     }
   }
 
-  return { valid: errors.length === 0, errors }
+  return { valid: errors.length === 0, infos, warnings, errors }
 }
 
 // ---------------------------------------------------------------------------

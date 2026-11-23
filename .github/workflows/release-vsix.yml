@@ -3,7 +3,7 @@ name: Release VSIX
 on:
   push:
     tags:
-      - "v*"
+      - "vsix-v*"
   workflow_dispatch:
 
 permissions:

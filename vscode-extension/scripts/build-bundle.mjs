@@ -9,7 +9,7 @@
  * Builds media/rasci-preview.css (core table CSS + VS Code theme layer)
  *
  * Usage:
- *   node scripts/build-bundle.js [--src <path-to-rasci-src>]
+ *   node scripts/build-bundle.mjs [--src <path-to-rasci-src>]
  *
  * Default source path: ../../src (relative to this script)
  */

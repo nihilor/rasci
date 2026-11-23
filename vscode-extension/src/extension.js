@@ -34,7 +34,7 @@ catch (err) {
 
 /**
  * markdown-it plugin for the built-in Markdown preview.
- * Renders ```rasci fences as RASCI tables; all other fences fall through to 
+ * Renders ```rasci fences as RASCI tables; all other fences fall through to
  * the previous fence rule (syntax highlighting, Mermaid, ...)
  * @param {any} md - The Markdown-it instance to extend provided by VS Code
  * @returns {any} The extended Markdown-it instance
@@ -150,7 +150,7 @@ function activate (context) {
 /**
  * Parses, validates and renders RASCI source to an HTML fragment
  * Parse and validation issues are rendered as inline blocks.
- * @param {string} source 
+ * @param {string} source
  * @param {"strict"|"warn"|"ignore"} [validationMode]
  * @returns {string} HTML fragment representing the rendered RASCI diagram and any validation issues
  */

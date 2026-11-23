@@ -4,16 +4,17 @@
 
 Write RASCI responsibility matrices as plain text and get immediate visual feedback while you edit.
 
-This extension provides language support and live preview for the RASCI DSL.
+This extension provides language support and live preview for the RASCI DSL, both for `.rasci` files and for ` ```rasci ` code blocks in Markdown.
 
 ## Features
 
 - Syntax highlighting for `.rasci` and `.rasci-rules`
 - Markdown fenced code block highlighting for ` ```rasci `
+- Rendering of ` ```rasci ` code blocks in VS Code's built-in Markdown preview
 - Live HTML preview for RASCI files
 - Preview commands in Command Palette and editor title bar
 - Auto-refresh preview on document changes
-- Inline parse errors and configurable validation handling in the preview panel
+- Inline parse errors and configurable validation handling in the preview panel and the Markdown preview
 
 ## Quick Start
 
@@ -46,7 +47,7 @@ Parse errors always stop rendering.
 
 ## RASCI in Markdown
 
-RASCI code fences are highlighted in Markdown files:
+RASCI code fences are highlighted in the Markdown editor and rendered as a table in VS Code's built-in Markdown preview (`Markdown: Open Preview to the Side`, `Cmd+K V` / `Ctrl+K V`):
 
 ````markdown
 ```rasci
@@ -59,6 +60,15 @@ tasks:
     PO[A] DEV[R]
 ```
 ````
+
+How it works:
+
+- Only fences with the info string `rasci` are rendered. All other code blocks, including Mermaid and other extensions' fences, stay untouched.
+- The setting `rasci.preview.validationMode` applies to the Markdown preview as well. Parse and validation issues appear inline at the position of the code block.
+- Colors follow the active VS Code theme (light, dark, high contrast).
+- Scroll sync between editor and preview works for RASCI blocks like for any other block.
+
+To show the source instead of the rendered table, disable the extension for the workspace or use a different info string, such as ` ```text `.
 
 ## Install
 
@@ -79,9 +89,10 @@ Or search for `RASCI DSL` in VS Code Extensions.
 
 ## Limitations
 
-- Preview commands are active only for RASCI editors.
+- Preview commands are active only for RASCI editors. Markdown files use VS Code's own Markdown preview.
 - The extension keeps one preview panel per RASCI document.
 - Preview rendering uses the bundled core; run a build when developing locally.
+- Rendering in Markdown applies to VS Code's built-in Markdown preview only. Other Markdown renderers (GitHub, static site generators) need their own integration of the `rasci` npm package.
 
 ## Development
 
@@ -94,7 +105,7 @@ npm install
 npm run build
 ```
 
-Launch Extension Development Host in VS Code (`F5`) and open a `.rasci` file.
+Launch Extension Development Host in VS Code (`F5`) and open a `.rasci` file, or a Markdown file with a ` ```rasci ` block and its Markdown preview.
 
 ## Packaging and Publishing
 

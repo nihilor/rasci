@@ -1,6 +1,8 @@
 # Build inputs — not needed at runtime
 scripts/
 node_modules/
+styles/
+rasci.token-map
 
 # Dev docs
 README.developers.md

@@ -77,6 +77,7 @@ npm install -g .
 - [Output formats](#output-formats)
 - [Web component](#web-component)
 - [Live preview website](#live-preview-website)
+- [VS Code extension](#vs-code-extension)
 - [RASCI legend](#rasci-legend)
 
 ## How
@@ -443,6 +444,17 @@ npm run live-editor
 ```
 
 Afterwards open `http://localhost:4173/docs/index.html` in your web browser or click the link in the terminal output.
+
+## VS Code extension
+
+The extension [RASCI DSL](https://marketplace.visualstudio.com/items?itemName=nihilor.rasci-language) brings the DSL into VS Code:
+
+- Syntax highlighting for `.rasci` files and ` ```rasci ` code blocks in Markdown
+- Live preview panel for `.rasci` files
+- Rendering of ` ```rasci ` code blocks in VS Code's built-in Markdown preview
+
+The extension bundles the parser and HTML renderer from [src/](src/) and the stylesheet [src/rasci-table.css](src/rasci-table.css).
+Source, build and packaging notes: [vscode-extension/README.md](vscode-extension/README.md).
 
 ## RASCI legend
 

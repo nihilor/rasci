@@ -6,6 +6,8 @@
  *  - Command "rasci.showPreview"       — opens live preview beside the editor
  *  - Command "rasci.showPreviewToSide" — opens preview explicitly to the side
  *  - Auto-update on document changes
+ *  - markdown-it plugin: renders ```rasci fences in the built-in Markdown preview
+ *    (styles via contributes."markdown.previewStyles" -> media/rasci-preview.css)
  */
 
 // @ts-check
@@ -21,7 +23,8 @@ let coreLoadError = null
 
 try {
   ({ parse, validate, renderHTML } = require("../dist/rasci-core.cjs"))
-} catch (err) {
+}
+catch (err) {
   coreLoadError = err
 }
 
@@ -29,14 +32,36 @@ try {
 // Activation
 // ---------------------------------------------------------------------------
 
+/**
+ * markdown-it plugin for the built-in Markdown preview.
+ * Renders ```rasci fences as RASCI tables; all other fences fall through to 
+ * the previous fence rule (syntax highlighting, Mermaid, ...)
+ * @param {any} md - The Markdown-it instance to extend provided by VS Code
+ * @returns {any} The extended Markdown-it instance
+ */
+function rasciMarkdownPlugin (md) {
+  const fallback = md.renderer.rules.fence
+  md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    if (token.info.trim().split(/\s+/)[0] !== "rasci")
+      return fallback(tokens, idx, options, env, self)
+    //  code-line + data-line keep editor and preview scroll in sync
+    const line = token.map ? ` data-line="${token.map[0]}"` : ""
+    const mode = getPreviewValidationMode(env?.currentDocument)
+    return `<div class="rasci-preview code-line"${line}>` + renderFragment(token.content, mode) + `</div>\n`
+  }
+  return md
+}
+
 /** @param {vscode.ExtensionContext} context */
-function activate(context) {
+function activate (context) {
+  const api = { extendMarkdownIt: md => rasciMarkdownPlugin(md) }
 
   if (coreLoadError) {
     vscode.window.showErrorMessage(
       "RASCI: failed to load extension core bundle (dist/rasci-core.cjs). Run 'npm run build' in vscode-extension, then reload VS Code."
     )
-    return
+    return api
   }
 
   // one panel per document URI
@@ -74,6 +99,7 @@ function activate(context) {
       {
         enableScripts:           true,
         retainContextWhenHidden: true,
+        localResourceRoots:      [vscode.Uri.joinPath(context.extensionUri, "media")],
       }
     )
 
@@ -81,7 +107,7 @@ function activate(context) {
     panel.onDidDispose(() => panels.delete(uri), null, context.subscriptions)
 
     // trigger the first render
-    updatePanel(panel, editor.document)
+    updatePanel(panel, editor.document, context.extensionUri)
   }
 
   context.subscriptions.push(
@@ -100,7 +126,7 @@ function activate(context) {
       const uri = event.document.uri.toString()
       if (!panels.has(uri)) return
       if (event.document.languageId !== "rasci") return
-      updatePanel(panels.get(uri), event.document)
+      updatePanel(panels.get(uri), event.document, context.extensionUri)
     })
   )
 
@@ -113,35 +139,26 @@ function activate(context) {
       panels.get(uri).reveal(undefined, true)
     })
   )
+
+  return api
 }
 
 // ---------------------------------------------------------------------------
-// Panel rendering
+// Shared rendering (panel + Markdown preview)
 // ---------------------------------------------------------------------------
 
 /**
- * @param {vscode.WebviewPanel} panel
- * @param {vscode.TextDocument} document
+ * Parses, validates and renders RASCI source to an HTML fragment
+ * Parse and validation issues are rendered as inline blocks.
+ * @param {string} source 
+ * @param {"strict"|"warn"|"ignore"} [validationMode]
+ * @returns {string} HTML fragment representing the rendered RASCI diagram and any validation issues
  */
-function updatePanel(panel, document) {
-  const source = document.getText()
-  const title  = path.basename(document.fileName, ".rasci")
-  const validationMode = getPreviewValidationMode(document)
-  panel.webview.html = buildWebviewHTML(source, title, validationMode)
-}
+function renderFragment (source, validationMode = "warn") {
+  if (coreLoadError)
+    return issueBlock("RASCI core not loaded", ["dist/rasci-core.cjs is missing or broken. Run 'npm run build' in vscode-extension, then reload VS Code."], "error")
 
-/**
- * Parses the RASCI source and returns a complete webview HTML document.
- * Parse and validation errors are displayed inline.
- *
- * @param {string} source
- * @param {string} title
- * @param {"strict"|"warn"|"ignore"} validationMode
- * @returns {string}
- */
-function buildWebviewHTML(source, title, validationMode = "warn") {
   let content
-
   try {
     const diagram = parse(normalizePreviewSource(source))
     const report = validate(diagram)
@@ -153,18 +170,58 @@ function buildWebviewHTML(source, title, validationMode = "warn") {
 
     if (hasErrors && validationMode === "strict") {
       content = issueBlock("Validation errors", report.errors, "error")
-    } else if (hasIssues && validationMode === "warn") {
+    }
+    else if (hasIssues && validationMode === "warn") {
       const blocks = []
       if (hasErrors) blocks.push(issueBlock("Validation errors", report.errors, "error"))
       if (hasWarnings) blocks.push(issueBlock("Validation warnings", report.warnings, "warning"))
       if (hasInfos) blocks.push(issueBlock("Validation info", report.infos, "warning"))
       content = `${blocks.join("\n")}\n${rendered}`
-    } else {
+    }
+    else {
       content = rendered
     }
-  } catch (e) {
+  }
+  catch (e) {
     content = issueBlock("Parse error", [e.message], "error")
   }
+  return content
+}
+
+// ---------------------------------------------------------------------------
+// Panel rendering
+// ---------------------------------------------------------------------------
+
+/**
+ * @param {vscode.WebviewPanel} panel
+ * @param {vscode.TextDocument} document
+ * @param {vscode.Uri} extensionUri
+ */
+function updatePanel (panel, document, extensionUri) {
+  const source = document.getText()
+  const title  = path.basename(document.fileName, ".rasci")
+  const validationMode = getPreviewValidationMode(document.uri)
+  const styleUri = panel.webview.asWebviewUri(
+    vscode.Uri.joinPath(extensionUri, "media", "rasci-preview.css")
+  )
+  panel.webview.html = buildWebviewHTML(source, title, validationMode, {
+    styleUri:  styleUri.toString(),
+    cspSource: panel.webview.cspSource
+  })
+}
+
+/**
+ * Parses the RASCI source and returns a complete webview HTML document.
+ * Parse and validation errors are displayed inline.
+ *
+ * @param {string} source
+ * @param {string} title
+ * @param {"strict"|"warn"|"ignore"} validationMode
+ * @param {{ styleUri: string, cspSource: string }} assets
+ * @returns {string}
+ */
+function buildWebviewHTML (source, title, validationMode, assets) {
+  let content = renderFragment(source, validationMode)
 
   return /* html */`<!DOCTYPE html>
 <html lang="en">
@@ -172,8 +229,9 @@ function buildWebviewHTML(source, title, validationMode = "warn") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'none'; style-src 'unsafe-inline'; script-src 'none';">
+        content="default-src 'none'; style-src ${assets.cspSource} 'unsafe-inline'; script-src 'none';">
   <title>${esc(title)}</title>
+  <link rel="stylesheet" href="${assets.styleUri}">
   <style>
     :root { color-scheme: light dark; }
     body {
@@ -183,90 +241,6 @@ function buildWebviewHTML(source, title, validationMode = "warn") {
       color:       var(--vscode-editor-foreground, #d4d4d4);
       padding:     1.5rem 2rem;
       margin:      0;
-    }
-
-    /* Force renderer table tokens to track VS Code theme classes.
-       The renderer injects its own :root palette; body-level variables override it in the webview tree. */
-    body.vscode-light,
-    body.vscode-high-contrast-light {
-      --rasci-border: #d0d7de;
-      --rasci-bg-corner: #f6f8fa;
-      --rasci-bg-header: #eef2f6;
-      --rasci-bg-task: #ffffff;
-      --rasci-text-primary: #24292f;
-      --rasci-text-muted: #8c959f;
-      --rasci-text-subtle: #57606a;
-      --rasci-error: #cf222e;
-
-      --rasci-r-bg: #fff8c5;
-      --rasci-r-fg: #7d4e00;
-      --rasci-a-bg: #ffebe9;
-      --rasci-a-fg: #953800;
-      --rasci-s-bg: #dafbe1;
-      --rasci-s-fg: #116329;
-      --rasci-c-bg: #ddf4ff;
-      --rasci-c-fg: #0a3069;
-      --rasci-i-bg: #f6f8fa;
-      --rasci-i-fg: #57606a;
-    }
-
-    body.vscode-dark,
-    body.vscode-high-contrast {
-      --rasci-border: #3d444d;
-      --rasci-bg-corner: #161b22;
-      --rasci-bg-header: #1f2630;
-      --rasci-bg-task: #0d1117;
-      --rasci-text-primary: #e6edf3;
-      --rasci-text-muted: #9da7b3;
-      --rasci-text-subtle: #b1bac4;
-      --rasci-error: #ff7b72;
-
-      --rasci-r-bg: #4f3b00;
-      --rasci-r-fg: #f2cc60;
-      --rasci-a-bg: #5a1e17;
-      --rasci-a-fg: #ffb3a7;
-      --rasci-s-bg: #0f3a20;
-      --rasci-s-fg: #7ee787;
-      --rasci-c-bg: #0c2d4a;
-      --rasci-c-fg: #79c0ff;
-      --rasci-i-bg: #21262d;
-      --rasci-i-fg: #c9d1d9;
-    }
-
-    .error-block {
-      border-left:   3px solid var(--vscode-errorForeground, #f44);
-      padding:       0.75rem 1rem;
-      background:    var(--vscode-inputValidation-errorBackground, rgba(255,68,68,0.08));
-      border-radius: 3px;
-      font-size:     12px;
-    }
-    .error-block strong {
-      display:       block;
-      margin-bottom: 0.4rem;
-      color:         var(--vscode-errorForeground, #f44);
-    }
-    .error-block ul { margin: 0; padding-left: 1.2rem; }
-    .error-block li {
-      font-family: var(--vscode-editor-font-family, monospace);
-      margin: 2px 0;
-    }
-    .warning-block {
-      border-left:   3px solid #d29922;
-      padding:       0.75rem 1rem;
-      background:    rgba(210,153,34,0.12);
-      border-radius: 3px;
-      font-size:     12px;
-      margin-bottom: 0.5rem;
-    }
-    .warning-block strong {
-      display:       block;
-      margin-bottom: 0.4rem;
-      color:         #7d4e00;
-    }
-    .warning-block ul { margin: 0; padding-left: 1.2rem; }
-    .warning-block li {
-      font-family: var(--vscode-editor-font-family, monospace);
-      margin: 2px 0;
     }
 
     /* RASCI table — VS Code theme variables */
@@ -337,12 +311,14 @@ function buildWebviewHTML(source, title, validationMode = "warn") {
   </style>
 </head>
 <body>
+  <div class="rasci-preview">
   ${content}
+  </div>
 </body>
 </html>`
 }
 
-function issueBlock(heading, messages, kind = "error") {
+function issueBlock (heading, messages, kind = "error") {
   const items = messages.map(m => `<li>${esc(m)}</li>`).join("\n      ")
   const cls = kind === "warning" ? "warning-block" : "error-block"
   return `<div class="${cls}">
@@ -351,7 +327,7 @@ function issueBlock(heading, messages, kind = "error") {
   </div>`
 }
 
-function esc(str) {
+function esc (str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -366,7 +342,7 @@ function esc(str) {
  * @param {string} source
  * @returns {string}
  */
-function normalizePreviewSource(source) {
+function normalizePreviewSource (source) {
   return String(source ?? "")
     .replace(/^\uFEFF/, "")
     .replace(/\r\n?/g, "\n")
@@ -376,11 +352,11 @@ function normalizePreviewSource(source) {
 }
 
 /**
- * @param {vscode.TextDocument} document
+ * @param {vscode.Uri | undefined} uri - resource scope; undefined falls back to the global/workspace settings
  * @returns {"strict"|"warn"|"ignore"}
  */
-function getPreviewValidationMode(document) {
-  const cfg = vscode.workspace.getConfiguration("rasci", document.uri)
+function getPreviewValidationMode (uri) {
+  const cfg = vscode.workspace.getConfiguration("rasci", uri)
   const mode = String(cfg.get("preview.validationMode", "warn")).toLowerCase()
   if (mode === "strict" || mode === "warn" || mode === "ignore") return mode
   return "warn"
@@ -388,6 +364,6 @@ function getPreviewValidationMode(document) {
 
 // ---------------------------------------------------------------------------
 
-function deactivate() {}
+function deactivate () {}
 
 module.exports = { activate, deactivate }

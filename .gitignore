@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Visual Studio Code Extensions
 vscode-extension/*.vsix
+vscode-extension/media/

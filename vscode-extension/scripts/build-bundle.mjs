@@ -5,9 +5,11 @@
  * Combines parser.js and renderer.html.js into a single CommonJS bundle
  * (dist/rasci-core.cjs) that the VS Code extension host can require()
  * without ES module support.
+ * 
+ * Builds media/rasci-preview.css (core table CSS + VS Code theme layer)
  *
  * Usage:
- *   node scripts/build-bundle.js [--src <path-to-rasci-src>]
+ *   node scripts/build-bundle.mjs [--src <path-to-rasci-src>]
  *
  * Default source path: ../../src (relative to this script)
  */
@@ -102,3 +104,25 @@ const outFile = resolve(outDir, "rasci-core.cjs")
 mkdirSync(outDir, { recursive: true })
 writeFileSync(outFile, bundle, "utf8")
 console.log(`[build-bundle] written: ${outFile}`)
+
+// ------------------------------------------------------------
+// Preview stylesheet: core table CSS + VS Code theme layer
+// ------------------------------------------------------------
+
+const coreCSS = readFileSync(resolve(args.src, "rasci-table.css"), "utf8")
+const themeCSS = readFileSync(resolve(__dir, "../styles/preview-theme.css"), "utf8")
+
+const css = `/**
+ * rasci-preview.css - auto-generated, do not edit manually
+ * Contains: rasci-table.css + styles/preview-theme.css (VS Code Layer)
+ * Regenerate via: npm run bundle
+ */
+${coreCSS}
+${themeCSS}
+`
+
+const mediaDir = resolve(__dir, "../media")
+mkdirSync(mediaDir, { recursive: true })
+writeFileSync(resolve(mediaDir, "rasci-preview.css"), css, "utf8")
+console.log(`[build-bundle] written: ${resolve(mediaDir, "rasci-preview.css")}`)
+

@@ -2,7 +2,7 @@
   "name": "rasci-language",
   "displayName": "RASCI DSL",
   "description": "Syntax highlighting and live preview for .rasci files and rasci code blocks in Markdown",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "nihilor",
   "engines": {
     "vscode": "^1.75.0"
@@ -22,10 +22,13 @@
   "main": "./src/extension.js",
   "activationEvents": [
     "onLanguage:rasci",
+    "onLanguage:markdown",
     "onCommand:rasci.showPreview",
     "onCommand:rasci.showPreviewToSide"
   ],
   "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewStyles": ["./media/rasci-preview.css"],
     "languages": [
       {
         "id": "rasci",

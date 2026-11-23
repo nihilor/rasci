@@ -3,7 +3,7 @@ name: Release VSIX
 on:
   push:
     tags:
-      - "v*"
+      - "vsix-v*"
   workflow_dispatch:
 
 permissions:
@@ -16,6 +16,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check Tag Matches Extension Version
+        if: github.ref_type == 'tag'
+        working-directory: vscode-extension
+        run: |
+          v="$(node -p 'require("./package.json").version')"
+          if [[ "${GITHUB_REF_NAME}" != "vsix-v${v}" ]]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${v}"
+            exit 1
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

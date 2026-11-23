@@ -37,6 +37,8 @@ After changing the plugin or the styles, run `npm run build` and reload the Exte
 
 ## Packaging
 
+Releases of the extension must be tagged with `vsix-v<version>`, releases of the npm package with `v<version>`.
+
 - Build and package VSIX:
   - `npm run package`
 
